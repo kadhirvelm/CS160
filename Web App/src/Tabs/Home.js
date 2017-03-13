@@ -6,6 +6,7 @@ import Flexbox from 'flexbox-react'
 import { getRecipe } from '../State/AmazonActions'
 
 import Recipes from './Recipes'
+import CreateRecipe from './CreateRecipe'
 
 class Home extends React.Component {
 
@@ -44,12 +45,19 @@ class Home extends React.Component {
     console.log(value)
   }
 
+  handleSubmit = (values) => {
+    console.log(values)
+  }
+
   render() {
     return (
       <Flexbox flexDirection='column'>
         <Tabs>
           <Tab label='Home'>
             <Recipes autoCompleteDataSource={ this.state.autoCompleteDataSource } tiles={ this.state.tiles } />
+          </Tab>
+          <Tab label='Create Recipe'>
+            <CreateRecipe onSubmit={ this.handleSubmit } />
           </Tab>
         </Tabs>
       </Flexbox>
