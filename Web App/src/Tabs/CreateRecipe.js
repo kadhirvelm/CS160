@@ -7,7 +7,8 @@ import Flexbox from 'flexbox-react'
 
 const validate = values => {
 	const errors = {}
-	const requiredFields = [ 'Name', 'Image', 'Ingredients', 'Directions' ]
+	console.log(values)
+	const requiredFields = [ 'recipeText', 'Image', 'Ingredients', 'Directions' ]
 	requiredFields.forEach( (field) => {
 		if (!values[field]) {
 			errors[ field ] = 'Required'
@@ -32,7 +33,7 @@ class CreateRecipe extends React.Component {
 	}
 
 	recipeNameText = ({ input, meta: { touched, error } }) => (
-		<TextField id='recipeNameText'
+		<TextField id='recipeText'
 		floatingLabelText='Recipe Name'
 		errorText={ touched && error }
 		fullWidth={ true }
@@ -40,11 +41,20 @@ class CreateRecipe extends React.Component {
 		/>
 	)
 
+	imageField = ({ input, meta: {touched, error } }) => (
+		<TextField id='recipeImage'
+		floatingLabelText='Recipe Image'
+		errorText={ touched && error }
+		fullWidth={ true }
+		{ ...input }
+		)
+
 	render(){
 		const { handleSubmit } = this.props
 		return (
 			<form onSubmit={ handleSubmit }>
 				<Field name='recipeText' component={ this.recipeNameText } label='Recipe Name' />
+				<Field name='recipeImage' component={ this.imageField } label='Recipe Image' />
 				<RaisedButton id='submit'
 	        type='submit'
 	        label='Create Recipe'
