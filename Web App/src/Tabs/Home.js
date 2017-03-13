@@ -3,11 +3,9 @@ import React from 'react'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import Flexbox from 'flexbox-react'
 
-import {GridList, GridTile} from 'material-ui/GridList'
-import AutoComplete from 'material-ui/AutoComplete'
-import CircularProgress from 'material-ui/CircularProgress'
-
 import { getRecipe } from '../State/AmazonActions'
+
+import Recipes from './Recipes'
 
 class Home extends React.Component {
 
@@ -20,7 +18,8 @@ class Home extends React.Component {
     return({
       dispatch: props.dispatch,
       isFetching: props.isFetching,
-      tiles: []
+      autoCompleteDataSource: [],
+      tiles: [],
     })
   }
 
@@ -33,7 +32,7 @@ class Home extends React.Component {
 
   getAllRecipes = (state) => {
     return new Promise( function(resolve) {
-      state.dispatch(getRecipe(), resolve)
+      state.dispatch(getRecipe(resolve))
     })
   }
 
@@ -50,23 +49,7 @@ class Home extends React.Component {
       <Flexbox flexDirection='column'>
         <Tabs>
           <Tab label='Home'>
-            { this.state.isFetching &&
-              <CircularProgress />
-            }
-            <AutoComplete
-              hintText='Search Recipes'
-              dataSource={ this.state.autoCompleteDataSource ? this.state.autoCompleteDataSource : [ 'None' ] }
-              filter={ AutoComplete.caseInsensitiveFilter }
-              onNewRequest={ this.handleRequest }
-              fullWidth={ true }
-            />
-            <GridList cellHeight={ 180 }>
-            { this.state.tiles.map( (tile, index) => (
-              <GridTile key={ index } title={ tile.name }>
-                <img src={ tile.image } />
-              </GridTile>
-              ))}
-            </GridList>
+            <Recipes autoCompleteDataSource={ this.state.autoCompleteDataSource } tiles={ this.state.tiles } />
           </Tab>
         </Tabs>
       </Flexbox>

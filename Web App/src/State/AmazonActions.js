@@ -28,7 +28,7 @@ function successRecipe(data){
 	}
 }
 
-export function getRecipe(){
+export function getRecipe(callback){
 	return dispatch => {
 		dispatch(requestRecipe())
 
@@ -42,6 +42,9 @@ export function getRecipe(){
 			cache: false,
 			success: function(data) {
 				dispatch(successRecipe(data))
+				if (callback){
+					callback(data)
+				}
 			},
 			error: function(error) {
 				dispatch(failed(error))
