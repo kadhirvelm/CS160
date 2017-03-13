@@ -1,0 +1,37 @@
+{
+  "intents": [
+    {
+      "intent": "WhatCanISay",
+    },
+    {
+      "intent": "DesiredFood",
+      "slots": [
+        {
+          "name": "Food",
+          "type": "AMAZON.LITERAL"
+        }
+      ]
+    },
+    {
+      "intent": "IngredientsQuery"
+    },
+    {
+      "intent": "NextStep"
+    },
+    {
+      "intent": "LastStep"
+    },
+    {
+      "intent": "StartOver"
+    },
+    {
+      "intent": "MainMenuIntent"
+    },
+    {
+      "intent": "QuitIntent"
+    },
+    {
+      "intent": "StartReading"
+    }
+  ]
+}
