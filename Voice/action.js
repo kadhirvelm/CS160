@@ -349,8 +349,8 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession, i
             title: title,
             text: output,
             image: {
-              smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png",
-              largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
+              smallImageUrl: image,
+              largeImageUrl: image
             }
         }
     }
