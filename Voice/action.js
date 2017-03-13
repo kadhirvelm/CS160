@@ -112,7 +112,7 @@ function onIntent(intentRequest, session, callback) {
     } else if ("IngredientsQuery" === intentName) {
         listIngredients(intent, session, callback);
     } else if ("StartReading" === intentName) {
-        listStep(intent, session, callback);
+        listSteps(intent, session, callback);
     } else if ("QuitIntent" === intentName) {
         quitIntent(intent, session, callback);
     } else if ("MainMenuIntent" === intentName) {
@@ -189,7 +189,7 @@ function findFoodRecipe(intent, session, callback) {
             session.attributes.currentRecipe = recipe
             session.attributes.currentFood = recipe['RecipeName']
             session.attributes.currentIngredients = recipe['Ingredients'].split(/\r?\n/)
-            session.attributes.currentDirections = recipe['Ingredients'].split(/\r?\n/)
+            session.attributes.currentDirections = recipe['Directions'].split(/\r?\n/)
             session.attributes.ingredientIndex = 0
             callback(session.attributes,
                 buildSpeechletResponse(recipe['RecipeName'], output, output, false, recipe['URL']));
@@ -216,6 +216,7 @@ function listIngredient(intent, session, callback) {
 
 function listIngredients(intent, session, callback) {
     session.attributes.ingredientMode = true;
+    session.attributes.directionsMode = false;
     session.attributes.ingredientIndex = 0;
     listIngredient(intent, session, callback)
 }
@@ -224,10 +225,10 @@ function listStep(intent, session, callback) {
     if (!session.attributes.currentDirections) {
         return doConfusedResponse(intent, session, callback);
     }
-    if (session.attributes.ingredientIndex >= (session.attributes.currentIngredients.length)) {
+    if (session.attributes.directionsIndex >= (session.attributes.currentDirections.length)) {
         var output = "There are no more steps. You can return to the main menu by saying restart";
     } else {
-        var output = session.attributes.currentDirections[session.attributes.directionsIndex];
+        var output = "Step " + session.attributes.directionsIndex + ": "  + session.attributes.currentDirections[session.attributes.directionsIndex];
     }
     callback(session.attributes,
         buildSpeechletResponse(CARD_TITLE, output, output, false));
@@ -235,6 +236,7 @@ function listStep(intent, session, callback) {
 
 function listSteps(intent, session, callback) {
     session.attributes.directionsMode = true;
+    session.attributes.ingredientMode = false;
     session.attributes.directionsIndex = 0;
     listStep(intent, session, callback)
 }
