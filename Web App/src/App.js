@@ -23,7 +23,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <Flexbox flexDirection='column'>
         <Home dispatch={ this.state.dispatch } isFetching={ this.state.isFetching } allRecipes={ this.state.allRecipes } />

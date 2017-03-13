@@ -3,10 +3,12 @@ import React from 'react'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import Flexbox from 'flexbox-react'
 
-import { getRecipe } from '../State/AmazonActions'
+import { getRecipe, newRecipe } from '../State/AmazonActions'
 
 import Recipes from './Recipes'
 import CreateRecipe from './CreateRecipe'
+
+import { chain } from 'ramda'
 
 class Home extends React.Component {
 
@@ -27,7 +29,10 @@ class Home extends React.Component {
   componentWillMount(){
     const getRecipes = this.getAllRecipes(this.state)
     getRecipes.then( (values) => {
-      console.log(values)
+      const organizeTiles = (entry) => entry.name
+      const autoCompleteDataSource = chain(organizeTiles, values.Items)
+      console.log(autoCompleteDataSource, values.Items)
+      this.setState({ autoCompleteDataSource: autoCompleteDataSource, tiles: values.Items })
     })
   }
 
@@ -46,7 +51,22 @@ class Home extends React.Component {
   }
 
   handleSubmit = (values) => {
-    console.log(values)
+    var readFile = new Promise( function(resolve) {
+      const reader = new FileReader()
+      reader.onload = function(theFile) {
+        const item = {
+          name: values.recipeNameText,
+          image: theFile.currentTarget.result,
+          ingredients: values.ingredientsList,
+          directions: values.directions,
+        }
+        resolve(item)
+      }
+      reader.readAsDataURL(values.recipeImage.item(0))
+    })
+    readFile.then( (item) => {
+      this.state.dispatch(newRecipe('Recipes', item))
+    })
   }
 
   render() {

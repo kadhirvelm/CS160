@@ -73,7 +73,6 @@ function newRecipeSuccess(data){
 export function newRecipe(tableName, item){
 	return dispatch => {
 		dispatch(newRecipeRequest())
-
 		$.ajax({
 			url: 'https://ddx0dwb6p8.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate',
 			data: {
@@ -84,9 +83,11 @@ export function newRecipe(tableName, item){
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				console.log(data)
 				dispatch(newRecipeSuccess(data))
 			},
 			error: function(error) {
+				console.log(error)
 				dispatch(failed(error))
 			}
 		})
