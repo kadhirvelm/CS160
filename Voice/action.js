@@ -111,6 +111,12 @@ function onIntent(intentRequest, session, callback) {
         handleGetHelpRequest(intent, session, callback);
     } else if ("IngredientsQuery" === intentName) {
         listIngredients(intent, session, callback);
+    } else if ("StartReading" === intentName) {
+        listStep(intent, session, callback);
+    } else if ("QuitIntent" === intentName) {
+        quitIntent(intent, session, callback);
+    } else if ("MainMenuIntent" === intentName) {
+        handleMainMenu(intent, session, callback);
     } else if ("NextStep" === intentName) {
         nextStep(intent, session, callback);
     } else if ("LastStep" === intentName) {
@@ -144,6 +150,7 @@ function doConfusedResponse(intent, session, callback) {
         callback(session.attributes,
         buildSpeechletResponse(CARD_TITLE, output, output, false));
 }
+
 
 function findFoodRecipe(intent, session, callback) {
     var queryFood = intent.slots.Food.value;
@@ -182,6 +189,7 @@ function findFoodRecipe(intent, session, callback) {
             session.attributes.currentRecipe = recipe
             session.attributes.currentFood = recipe['RecipeName']
             session.attributes.currentIngredients = recipe['Ingredients'].split(/\r?\n/)
+            session.attributes.currentDirections = recipe['Ingredients'].split(/\r?\n/)
             session.attributes.ingredientIndex = 0
             callback(session.attributes,
                 buildSpeechletResponse(recipe['RecipeName'], output, output, false, recipe['URL']));
@@ -208,34 +216,76 @@ function listIngredient(intent, session, callback) {
 
 function listIngredients(intent, session, callback) {
     session.attributes.ingredientMode = true;
-    if (session.attributes.ingredientMode) {
-        session.attributes.ingredientIndex = 0;
-        listIngredient(intent, session, callback)
-    } else {
+    session.attributes.ingredientIndex = 0;
+    listIngredient(intent, session, callback)
+}
+
+function listStep(intent, session, callback) {
+    if (!session.attributes.currentDirections) {
         return doConfusedResponse(intent, session, callback);
     }
+    if (session.attributes.ingredientIndex >= (session.attributes.currentIngredients.length)) {
+        var output = "There are no more steps. You can return to the main menu by saying restart";
+    } else {
+        var output = session.attributes.currentDirections[session.attributes.directionsIndex];
+    }
+    callback(session.attributes,
+        buildSpeechletResponse(CARD_TITLE, output, output, false));
 }
+
+function listSteps(intent, session, callback) {
+    session.attributes.directionsMode = true;
+    session.attributes.directionsIndex = 0;
+    listStep(intent, session, callback)
+}
+
 
 function nextStep(intent, session, callback) {
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex += 1;
         listIngredient(intent, session, callback)
+    } else if (session.attributes.directionsMode) {
+        session.attributes.directionsIndex += 1;
+        listStep(intent, session, callback)
+
     } else {
         return doConfusedResponse(intent, session, callback);
     }
 }
 function lastStep(intent, session, callback) {
     if (session.attributes.ingredientMode) {
-        session.attributes.ingredientIndex =  session.attributes.currentIngredients.length;
+        session.attributes.ingredientIndex = session.attributes.currentIngredients.length - 1;
         listIngredient(intent, session, callback)
+    } else if (session.attributes.directionsMode) {
+        session.attributes.directionsIndex = session.attributes.currentDirections.length - 1;
+        listStep(intent, session, callback)
     } else {
         return doConfusedResponse(intent, session, callback);
     }
 }
 
+function quitIntent(intent, session, callback) {
+    var output = "Ok. "
+    if (session.attributes.ingredientMode) {
+        session.attributes.ingredientMode = false;
+        return handleMainMenu(intent, session, callback)
+    } else if (session.attributes.directionsMode) {
+        session.attributes.directionsMode = false;
+        return handleMainMenu(intent, session, callback)
+    } else {
+        return handleFinishSessionRequest(intent, session, callback)
+    }
+}
+
+
+function handleMainMenu(intent, session, callback) {
+    session.attributes.ingredientMode = false;
+    session.attributes.directionsMode = false;
+    return getWelcomeResponse(callback);
+}
+
+
 function handleRestartActivity(intent, session, callback) {
-    var queryActivity = intent.slots.Activity.value;
-    console.log("Intent", intent, queryActivity);
     return doConfusedResponse(intent, session, callback);
 }
 
@@ -291,7 +341,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession, i
             title: repromptText,
             content: output
         }
-    else {
+    } else {
         var card = {
             type: 'Standard',
             title: title,
