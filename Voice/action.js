@@ -149,6 +149,11 @@ function findFoodRecipe(intent, session, callback) {
     var queryFood = intent.slots.Food.value;
     console.log("FOOD Q:", intent, queryFood);
 
+
+    if (!session.attributes) {
+        session.attributes = {};
+    }
+
     getRequest(BASE_URL + '&RecipeName='+queryFood, function(success, cb) {
         if (!success) {
             var output = "There was an error when trying to fetch recipes";
@@ -179,10 +184,11 @@ function findFoodRecipe(intent, session, callback) {
             session.attributes.currentIngredients = recipe['Ingredients'].split(/\r?\n/)
             session.attributes.ingredientIndex = 0
             callback(session.attributes,
-                buildSpeechletResponse(CARD_TITLE, output, output, false));
+                buildSpeechletResponse(recipe['RecipeName'], output, output, false, recipe['URL']));
         }
     });
 }
+
 function listIngredient(intent, session, callback) {
     if (!session.attributes.currentIngredients) {
         return doConfusedResponse(intent, session, callback);
@@ -200,7 +206,6 @@ function listIngredient(intent, session, callback) {
         buildSpeechletResponse(CARD_TITLE, output, output, false));
 }
 
-
 function listIngredients(intent, session, callback) {
     session.attributes.ingredientMode = true;
     if (session.attributes.ingredientMode) {
@@ -210,7 +215,6 @@ function listIngredients(intent, session, callback) {
         return doConfusedResponse(intent, session, callback);
     }
 }
-
 
 function nextStep(intent, session, callback) {
     if (session.attributes.ingredientMode) {
@@ -279,17 +283,31 @@ function buildSSMLResponse(title, output, repromptText, shouldEndSession) {
 }
 
 
-function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
+function buildSpeechletResponse(title, output, repromptText, shouldEndSession, image) {
+    console.log("Image", image);
+    if (!image) {
+        var card = {
+            type: "Simple",
+            title: repromptText,
+            content: output
+        }
+    else {
+        var card = {
+            type: 'Standard',
+            title: title,
+            text: output,
+            image: {
+              smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png",
+              largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
+            }
+        }
+    }
     return {
         outputSpeech: {
             type: "PlainText",
             text: output
         },
-        card: {
-            type: "Simple",
-            title: repromptText,
-            content: output
-        },
+        card: card,
         reprompt: {
             outputSpeech: {
                 type: "PlainText",
