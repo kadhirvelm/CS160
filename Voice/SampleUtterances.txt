@@ -1,0 +1,46 @@
+DesiredFood I'd like to make {mac and cheese|Food}
+DesiredFood Find {mac and cheese|Food}
+DesiredFood Find {burgers|Food}
+DesiredFood I'd like to make {burrito|Food}
+DesiredFood How can I make {scrambled eggs|Food}
+DesiredFood Recipes for {sandwiches|Food}
+DesiredFood How do I make {pesto sauce|Food}
+
+WhatCanISay Help
+WhatCanISay What can I say
+WhatCanISay What do I say
+
+IngredientsQuery Ingredients
+IngredientsQuery What are the ingredients
+IngredientsQuery What ingredients are there
+IngredientsQuery which ingredients
+
+NextStep next
+NextStep next part
+NextStep next ingredient
+NextStep next step
+NextStep then what
+NextStep what's next
+
+LastStep last
+LastStep last ingredient
+LastStep last step
+LastStep what's the last part
+LastStep what's last
+
+StartOver start again
+StartOver start over
+StartOver restart
+
+MainMenuIntent main menu
+MainMenuIntent take me back to main menu
+MainMenuIntent go to main menu
+
+QuitIntent quit
+QuitIntent abort
+QuitIntent exit
+QuitIntent i give up
+
+
+
+
