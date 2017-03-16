@@ -27,7 +27,7 @@ store.subscribe( () => {
 injectTapEventPlugin()
 
 const muiTheme = getMuiTheme({
-  fontFamily: 'FiraSans-Thin',
+  fontFamily: 'FiraSans-Regular',
   palette: {
     primary1Color: _colors.red600,
     primary2Color: _colors.red600,

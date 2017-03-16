@@ -12,6 +12,7 @@ function amazonDB(state = {
 }, action) {
 	const fetch = {
 		isFetching: action.isFetching,
+		resetForm: action.resetForm ? action.resetForm : false,
 	}
 	switch (action.type) {
 		case FAILED_REQUEST:

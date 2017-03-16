@@ -9,6 +9,7 @@ function failed(message){
 	return {
 		type: FAILED_REQUEST,
 		isFetching: false,
+		resetForm: true,
 		message,
 	}
 }
@@ -28,7 +29,7 @@ function successRecipe(data){
 	}
 }
 
-export function getRecipe(){
+export function getRecipe(callback){
 	return dispatch => {
 		dispatch(requestRecipe())
 
@@ -42,6 +43,9 @@ export function getRecipe(){
 			cache: false,
 			success: function(data) {
 				dispatch(successRecipe(data))
+				if (callback){
+					callback(data)
+				}
 			},
 			error: function(error) {
 				dispatch(failed(error))
@@ -64,26 +68,31 @@ function newRecipeSuccess(data){
 	return {
 		type: NEW_RECIPE_SUCCESS,
 		isFetching: false,
+		resetForm: true,
 	}
 }
 
-export function newRecipe(tableName, item){
+export function newRecipe(item){
+
+	const allData = {
+		'TableName': 'Recipes',
+		'Item' : item,
+	}
 	return dispatch => {
 		dispatch(newRecipeRequest())
 
 		$.ajax({
 			url: 'https://ddx0dwb6p8.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate',
-			data: {
-				'TableName': { tableName },
-				'Item' : { item },
-			},
+			data: JSON.stringify(allData),
 			type: 'POST',
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
+				console.log(data)
 				dispatch(newRecipeSuccess(data))
 			},
 			error: function(error) {
+				console.log(error)
 				dispatch(failed(error))
 			}
 		})
