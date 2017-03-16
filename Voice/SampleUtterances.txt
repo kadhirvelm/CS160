@@ -28,6 +28,14 @@ LastStep last step
 LastStep what's the last part
 LastStep what's last
 
+StartReading start
+StartReading start recipe
+StartReading recipe instructions
+StartReading recipe steps
+StartReading read instructions
+StartReading read recipe
+StartReading begin recipe
+
 StartOver start again
 StartOver start over
 StartOver restart
@@ -40,7 +48,4 @@ QuitIntent quit
 QuitIntent abort
 QuitIntent exit
 QuitIntent i give up
-
-
-
 
