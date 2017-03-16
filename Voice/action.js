@@ -104,7 +104,7 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
 
     console.log("Dispatching", intentName);
-    
+
     // dispatch custom intents to handlers here
     if ("DesiredFood" === intentName) {
         findFoodRecipe(intent, session, callback);
@@ -216,6 +216,9 @@ function listIngredient(intent, session, callback) {
 }
 
 function listIngredients(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
     session.attributes.ingredientMode = true;
     session.attributes.directionsMode = false;
     session.attributes.ingredientIndex = 0;
@@ -268,7 +271,11 @@ function lastStep(intent, session, callback) {
 }
 
 function quitIntent(intent, session, callback) {
-    var output = "Ok. ";
+    var output = "Ok. "
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientMode = false;
         return handleMainMenu(intent, session, callback);
@@ -282,6 +289,10 @@ function quitIntent(intent, session, callback) {
 
 
 function handleMainMenu(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     session.attributes.ingredientMode = false;
     session.attributes.directionsMode = false;
     return getWelcomeResponse(callback);
@@ -336,6 +347,12 @@ function buildSSMLResponse(title, output, repromptText, shouldEndSession) {
     };
 }
 
+function toSSL(image) {
+    if (image.indexOf('https') == -1) {
+        return image.replace('http', 'https');
+    }
+    return image;
+}
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession, image) {
     console.log("Image", image);
@@ -347,13 +364,14 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession, i
             content: output
         };
     } else {
+        var imageURL = toSSL(image);
         card = {
             type: 'Standard',
             title: title,
             text: output,
             image: {
-              smallImageUrl: image,
-              largeImageUrl: image
+              smallImageUrl: imageURL,
+              largeImageUrl: imageURL
             }
         };
     }
