@@ -38,6 +38,7 @@ class CreateRecipe extends React.Component {
 
 	propsConst = (props) => {
 		return({
+			resetForm: props.resetForm,
 		})
 	}
 
@@ -47,6 +48,9 @@ class CreateRecipe extends React.Component {
 
 	componentWillReceiveProps(nextProps){
 		this.setState(this.propsConst(nextProps))
+		if (nextProps.resetForm) {
+			this.resetForm()
+		}
 	}
 
 	recipeNameText = ({ input, meta: { touched, error } }) => (
@@ -87,6 +91,8 @@ class CreateRecipe extends React.Component {
 		/>
 	)
 
+	resetForm = () => { this.props.reset(); this.setState({ picture: undefined }) }
+
 	render(){
 		const { handleSubmit } = this.props
 		return (
@@ -94,7 +100,7 @@ class CreateRecipe extends React.Component {
 				<Field name='recipeNameText' component={ this.recipeNameText } label='Recipe Name' />
 				<Field name='recipeImage' component={ this.imageField } label='Recipe Image' />
 				{ this.state.picture &&
-					<img src={ this.state.picture } style={ picturePreview } role='presentation' />
+					<img src={ this.state.picture } style={ picturePreview } alt='' />
 				}
 				<Field name='ingredientsList' component={ this.ingredientsList } label='Ingredient List' />
 				<Field name='directions' component={ this.directions } label='Directions' />

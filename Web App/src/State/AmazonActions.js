@@ -9,6 +9,7 @@ function failed(message){
 	return {
 		type: FAILED_REQUEST,
 		isFetching: false,
+		resetForm: true,
 		message,
 	}
 }
@@ -67,18 +68,22 @@ function newRecipeSuccess(data){
 	return {
 		type: NEW_RECIPE_SUCCESS,
 		isFetching: false,
+		resetForm: true,
 	}
 }
 
-export function newRecipe(tableName, item){
+export function newRecipe(item){
+
+	const allData = {
+		'TableName': 'Recipes',
+		'Item' : item,
+	}
 	return dispatch => {
 		dispatch(newRecipeRequest())
+
 		$.ajax({
 			url: 'https://ddx0dwb6p8.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate',
-			data: {
-				'TableName': { tableName },
-				'Item' : { item },
-			},
+			data: JSON.stringify(allData),
 			type: 'POST',
 			dataType: 'json',
 			cache: false,

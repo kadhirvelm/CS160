@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Tabs, Tab } from 'material-ui/Tabs'
+import CircularProgress from 'material-ui/CircularProgress'
 import Flexbox from 'flexbox-react'
 
 import { getRecipe, newRecipe } from '../State/AmazonActions'
@@ -8,7 +9,7 @@ import { getRecipe, newRecipe } from '../State/AmazonActions'
 import Recipes from './Recipes'
 import CreateRecipe from './CreateRecipe'
 
-import { chain } from 'ramda'
+import { chain, toLower } from 'ramda'
 
 class Home extends React.Component {
 
@@ -21,17 +22,21 @@ class Home extends React.Component {
     return({
       dispatch: props.dispatch,
       isFetching: props.isFetching,
-      autoCompleteDataSource: [],
-      tiles: [],
+      autoCompleteDataSource: this.state ? this.state.autoCompleteDataSource : [],
+      tiles: this.state ? this.state.tiles : [],
+      resetForm: props.resetForm,
     })
   }
 
   componentWillMount(){
+    this.refreshContents()
+  }
+
+  refreshContents = () => {
     const getRecipes = this.getAllRecipes(this.state)
     getRecipes.then( (values) => {
-      const organizeTiles = (entry) => entry.name
+      const organizeTiles = (entry) => entry.RecipeName
       const autoCompleteDataSource = chain(organizeTiles, values.Items)
-      console.log(autoCompleteDataSource, values.Items)
       this.setState({ autoCompleteDataSource: autoCompleteDataSource, tiles: values.Items })
     })
   }
@@ -43,7 +48,10 @@ class Home extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    this.setState(this.propsConst)
+    this.setState(this.propsConst(nextProps))
+    if (nextProps.resetForm) {
+      this.refreshContents()
+    }
   }
 
   handleRequest = (value) => {
@@ -51,21 +59,32 @@ class Home extends React.Component {
   }
 
   handleSubmit = (values) => {
-    var readFile = new Promise( function(resolve) {
-      const reader = new FileReader()
-      reader.onload = function(theFile) {
-        const item = {
-          name: values.recipeNameText,
-          image: theFile.currentTarget.result,
-          ingredients: values.ingredientsList,
-          directions: values.directions,
-        }
-        resolve(item)
+    this.setState({ isFetching: true })
+    const uploadFile = this.upload(values.recipeImage.item(0))
+    uploadFile.then( (link) => {
+      const newRecipe = {
+        RecipeName: toLower(values.recipeNameText),
+        URL: link,
+        Ingredients: values.ingredientsList,
+        Directions: values.directions,
       }
-      reader.readAsDataURL(values.recipeImage.item(0))
+      this.dispatchAction(newRecipe)
     })
-    readFile.then( (item) => {
-      this.state.dispatch(newRecipe('Recipes', item))
+  }
+
+  dispatchAction = (newDBEntry) => { this.state.dispatch(newRecipe(newDBEntry)) }
+
+  upload(file) {
+    return new Promise( function(resolve) {
+      var fd = new FormData()
+      fd.append("image", file)
+      var xhr = new XMLHttpRequest()
+      xhr.open("POST", "https://api.imgur.com/3/image.json")
+      xhr.onload = function() {
+        resolve(JSON.parse(xhr.responseText).data.link)
+      }
+      xhr.setRequestHeader('Authorization', 'Client-ID 28aaa2e823b03b1')
+      xhr.send(fd)
     })
   }
 
@@ -73,11 +92,17 @@ class Home extends React.Component {
     return (
       <Flexbox flexDirection='column'>
         <Tabs>
-          <Tab label='Home'>
+          <Tab label='View Recipes'>
             <Recipes autoCompleteDataSource={ this.state.autoCompleteDataSource } tiles={ this.state.tiles } />
           </Tab>
           <Tab label='Create Recipe'>
-            <CreateRecipe onSubmit={ this.handleSubmit } />
+            { this.state.isFetching && 
+              <CircularProgress />
+            }
+            <CreateRecipe onSubmit={ this.handleSubmit } resetForm={ this.state.resetForm } />
+          </Tab>
+          <Tab label='Settings'>
+            Settings Go Here
           </Tab>
         </Tabs>
       </Flexbox>
