@@ -23,11 +23,13 @@ exports.handler = (event, context, callback) => {
         statusCode: err ? '400' : '200',
         body: err ? err.message : JSON.stringify(res),
         headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Headers": "x-requested-with",
+            "Access-Control-Allow-Credentials" : true
         },
     });
-
+    
     switch (event.httpMethod) {
         case 'DELETE':
             dynamo.deleteItem(JSON.parse(event.body), done);
