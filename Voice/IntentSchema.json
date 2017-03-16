@@ -1,7 +1,7 @@
 {
   "intents": [
     {
-      "intent": "WhatCanISay",
+      "intent": "WhatCanISay"
     },
     {
       "intent": "DesiredFood",

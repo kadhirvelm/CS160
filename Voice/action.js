@@ -104,6 +104,7 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
 
     console.log("Dispatching", intentName);
+    
     // dispatch custom intents to handlers here
     if ("DesiredFood" === intentName) {
         findFoodRecipe(intent, session, callback);
@@ -146,7 +147,7 @@ function getWelcomeResponse(callback) {
 }
 
 function doConfusedResponse(intent, session, callback) {
-    var output = "Sorry I got confused. What kind of recipe can I help you with?"
+    var output = "Sorry I got confused. What kind of recipe can I help you with?";
         callback(session.attributes,
         buildSpeechletResponse(CARD_TITLE, output, output, false));
 }
@@ -171,26 +172,26 @@ function findFoodRecipe(intent, session, callback) {
         var numFound = cb['Items'].length;
 
         if (numFound > 1) {
-            var output = "I found " + numFound + " items: "
+            var output = "I found " + numFound + " items: ";
             cb['Items'].forEach(function(element) {
                output += element['RecipeName'] + ', ';
             });
             output += '. Could you be more specific about what you would like to make?';
             callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
-        } else if (numFound == 0) {
+        } else if (numFound === 0) {
             var output = "There were no matching items for " + queryFood + ".";
             callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
         } else {
             // One Item
-            var recipe = cb['Items'][0]
+            var recipe = cb['Items'][0];
             var output = "Great! Let's get cooking. You can ask me for the ingredients or to read the recipe";
-            session.attributes.currentRecipe = recipe
-            session.attributes.currentFood = recipe['RecipeName']
-            session.attributes.currentIngredients = recipe['Ingredients'].split(/\r?\n/)
-            session.attributes.currentDirections = recipe['Directions'].split(/\r?\n/)
-            session.attributes.ingredientIndex = 0
+            session.attributes.currentRecipe = recipe;
+            session.attributes.currentFood = recipe['RecipeName'];
+            session.attributes.currentIngredients = recipe['Ingredients'].split(/\r?\n/);
+            session.attributes.currentDirections = recipe['Directions'].split(/\r?\n/);
+            session.attributes.ingredientIndex = 0;
             callback(session.attributes,
                 buildSpeechletResponse(recipe['RecipeName'], output, output, false, recipe['URL']));
         }
@@ -204,7 +205,7 @@ function listIngredient(intent, session, callback) {
     if (session.attributes.ingredientIndex >= (session.attributes.currentIngredients.length)) {
         var output = "There are no more ingredients. You can start the recipe by saying start";
     } else {
-        var ingredient = session.attributes.currentIngredients[session.attributes.ingredientIndex]
+        var ingredient = session.attributes.currentIngredients[session.attributes.ingredientIndex];
         var output = session.attributes.currentIngredients[session.attributes.ingredientIndex];
         if (session.attributes.ingredientIndex === (session.attributes.currentIngredients.length -1)) {
             output  += ". That's the last one - say start recipe when you have got " + ingredient + ".";
@@ -245,10 +246,10 @@ function listSteps(intent, session, callback) {
 function nextStep(intent, session, callback) {
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex += 1;
-        listIngredient(intent, session, callback)
+        listIngredient(intent, session, callback);
     } else if (session.attributes.directionsMode) {
         session.attributes.directionsIndex += 1;
-        listStep(intent, session, callback)
+        listStep(intent, session, callback);
 
     } else {
         return doConfusedResponse(intent, session, callback);
@@ -257,25 +258,25 @@ function nextStep(intent, session, callback) {
 function lastStep(intent, session, callback) {
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex = session.attributes.currentIngredients.length - 1;
-        listIngredient(intent, session, callback)
+        listIngredient(intent, session, callback);
     } else if (session.attributes.directionsMode) {
         session.attributes.directionsIndex = session.attributes.currentDirections.length - 1;
-        listStep(intent, session, callback)
+        listStep(intent, session, callback);
     } else {
         return doConfusedResponse(intent, session, callback);
     }
 }
 
 function quitIntent(intent, session, callback) {
-    var output = "Ok. "
+    var output = "Ok. ";
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientMode = false;
-        return handleMainMenu(intent, session, callback)
+        return handleMainMenu(intent, session, callback);
     } else if (session.attributes.directionsMode) {
         session.attributes.directionsMode = false;
-        return handleMainMenu(intent, session, callback)
+        return handleMainMenu(intent, session, callback);
     } else {
-        return handleFinishSessionRequest(intent, session, callback)
+        return handleFinishSessionRequest(intent, session, callback);
     }
 }
 
@@ -307,10 +308,11 @@ function handleGetHelpRequest(intent, session, callback) {
     if (!session.attributes) {
         session.attributes = {};
     }
+    var speechOutput = "";
     if (session.attributes.ingredientMode) {
-        var speechOutput = "You can ask me to go to the next ingredient or to the last ingredient, or to start reading the recipe. To return to the main menu - say main menu or quit";
+        speechOutput = "You can ask me to go to the next ingredient or to the last ingredient, or to start reading the recipe. To return to the main menu - say main menu or quit";
     } else {
-        var speechOutput = "You can say something like 'find burgers' or 'I would like to make mac and cheese' or quit";
+        speechOutput = "You can say something like 'find burgers' or 'I would like to make mac and cheese' or quit";
     }
     callback(session.attributes,
         buildSpeechletResponseWithoutCard(speechOutput, speechOutput, false));
@@ -337,14 +339,15 @@ function buildSSMLResponse(title, output, repromptText, shouldEndSession) {
 
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession, image) {
     console.log("Image", image);
+    var card;
     if (!image) {
-        var card = {
+        card = {
             type: "Simple",
             title: repromptText,
             content: output
-        }
+        };
     } else {
-        var card = {
+        card = {
             type: 'Standard',
             title: title,
             text: output,
@@ -352,7 +355,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession, i
               smallImageUrl: image,
               largeImageUrl: image
             }
-        }
+        };
     }
     return {
         outputSpeech: {
