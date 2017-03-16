@@ -232,7 +232,8 @@ function listStep(intent, session, callback) {
     if (session.attributes.directionsIndex >= (session.attributes.currentDirections.length)) {
         var output = "There are no more steps. You can return to the main menu by saying restart";
     } else {
-        var output = "Step " + session.attributes.directionsIndex + ": "  + session.attributes.currentDirections[session.attributes.directionsIndex];
+        var stepNum = parseInt(session.attributes.directionsIndex) + 1
+        var output = "Step " + stepNum + ": "  + session.attributes.currentDirections[session.attributes.directionsIndex];
     }
     callback(session.attributes,
         buildSpeechletResponse(CARD_TITLE, output, output, false));
