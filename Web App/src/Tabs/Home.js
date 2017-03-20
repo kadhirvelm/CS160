@@ -7,6 +7,7 @@ import { getRecipe, newRecipe } from '../State/AmazonActions'
 
 import Recipes from './Recipes'
 import CreateRecipe from './CreateRecipe'
+import Settings from './Settings'
 
 import { chain } from 'ramda'
 
@@ -73,12 +74,19 @@ class Home extends React.Component {
     return (
       <Flexbox flexDirection='column'>
         <Tabs>
+
           <Tab label='Home'>
             <Recipes autoCompleteDataSource={ this.state.autoCompleteDataSource } tiles={ this.state.tiles } />
           </Tab>
+
           <Tab label='Create Recipe'>
             <CreateRecipe onSubmit={ this.handleSubmit } />
           </Tab>
+
+          <Tab label="Settings">
+            <Settings />
+          </Tab>
+
         </Tabs>
       </Flexbox>
     );
