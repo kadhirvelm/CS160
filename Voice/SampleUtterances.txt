@@ -10,25 +10,40 @@ DesiredFood How can I make {scrambled eggs|Food}
 DesiredFood How do I make {scrambled eggs|Food}
 DesiredFood Recipes for {sandwiches|Food}
 DesiredFood How do I make {pesto sauce|Food}
+DesiredFood I would like some {pizza|Food}
 DesiredFood Give me a recipe for {pizza|Food}
+DesiredFood Show me recipes for {pizza|Food}
 
 IngredientsQuery Ingredients
 IngredientsQuery What are the ingredients
 IngredientsQuery What ingredients are there
 IngredientsQuery which ingredients
+IngredientsQuery what do i need to make it
 
 NextStep next
 NextStep next part
 NextStep next ingredient
+NextStep got that then what
+NextStep got it then what
+NextStep next one
 NextStep next step
+NextStep alrighty
 NextStep then what
 NextStep what's next
+NextStep hit me with then next one
+NextStep ok. then what
 
 LastStep last
+LastStep previous
 LastStep last ingredient
+LastStep previous ingredient
+LastStep wait go back
+LastStep what was the last one
+LastStep backwards
+LastStep step backwards
+LastStep what was the previous one
 LastStep last step
-LastStep what's the last part
-LastStep what's last
+LastStep last parth
 
 StartOver start again
 StartOver start over
