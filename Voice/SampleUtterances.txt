@@ -1,4 +1,4 @@
-WhatCanISay Help
+WhatCanISay Help Me
 WhatCanISay What can I say
 WhatCanISay What do I say
 
@@ -25,10 +25,10 @@ NextStep next part
 NextStep next ingredient
 NextStep got that then what
 NextStep got it then what
-NextStep next one
 NextStep next step
 NextStep alrighty
 NextStep then what
+NextStep cool then what
 NextStep what's next
 NextStep hit me with then next one
 NextStep ok. then what
@@ -43,7 +43,7 @@ LastStep backwards
 LastStep step backwards
 LastStep what was the previous one
 LastStep last step
-LastStep last parth
+LastStep last part
 
 StartOver start again
 StartOver start over
