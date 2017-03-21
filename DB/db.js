@@ -46,9 +46,8 @@ exports.handler = (event, context, callback) => {
             break;
         case 'POST':
             var dbObject = JSON.parse(event.body);
-            var trimmedName = dbObject.RecipeName.trim();
-            dbObject.RecipeName = trimmedName;
-            
+            var trimmedName = dbObject.Item.RecipeName.trim();
+            dbObject.Item.RecipeName = trimmedName;
             dynamo.putItem(dbObject, done);
             break;
         case 'PUT':
