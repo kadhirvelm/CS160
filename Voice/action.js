@@ -226,6 +226,10 @@ function listIngredients(intent, session, callback) {
 }
 
 function listStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (!session.attributes.currentDirections) {
         return doConfusedResponse(intent, session, callback);
     }
@@ -240,6 +244,10 @@ function listStep(intent, session, callback) {
 }
 
 function listSteps(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     session.attributes.directionsMode = true;
     session.attributes.ingredientMode = false;
     session.attributes.directionsIndex = 0;
@@ -248,6 +256,10 @@ function listSteps(intent, session, callback) {
 
 
 function nextStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex += 1;
         listIngredient(intent, session, callback);
@@ -260,6 +272,10 @@ function nextStep(intent, session, callback) {
     }
 }
 function lastStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex -= 1;
         if (session.attributes.ingredientIndex < 0) {
