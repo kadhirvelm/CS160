@@ -226,6 +226,10 @@ function listIngredients(intent, session, callback) {
 }
 
 function listStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (!session.attributes.currentDirections) {
         return doConfusedResponse(intent, session, callback);
     }
@@ -240,6 +244,10 @@ function listStep(intent, session, callback) {
 }
 
 function listSteps(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     session.attributes.directionsMode = true;
     session.attributes.ingredientMode = false;
     session.attributes.directionsIndex = 0;
@@ -248,6 +256,10 @@ function listSteps(intent, session, callback) {
 
 
 function nextStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (session.attributes.ingredientMode) {
         session.attributes.ingredientIndex += 1;
         listIngredient(intent, session, callback);
@@ -260,11 +272,23 @@ function nextStep(intent, session, callback) {
     }
 }
 function lastStep(intent, session, callback) {
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+
     if (session.attributes.ingredientMode) {
-        session.attributes.ingredientIndex = session.attributes.currentIngredients.length - 1;
+        session.attributes.ingredientIndex -= 1;
+        if (session.attributes.ingredientIndex < 0) {
+            // Clamp the value to 0
+            session.attributes.ingredientIndex = 0;
+        }
         listIngredient(intent, session, callback);
     } else if (session.attributes.directionsMode) {
-        session.attributes.directionsIndex = session.attributes.currentDirections.length - 1;
+        session.attributes.directionsIndex -= 1;
+        if (session.attributes.directionsIndex < 0) {
+            // Clamp the value to 0
+            session.attributes.directionsIndex = 0;
+        }
         listStep(intent, session, callback);
     } else {
         return doConfusedResponse(intent, session, callback);
@@ -332,7 +356,7 @@ function handleGetHelpRequest(intent, session, callback) {
 
 function handleFinishSessionRequest(intent, session, callback) {
     callback(session.attributes,
-        buildSpeechletResponseWithoutCard("Bon appetit!", "", true));
+        buildSpeechletResponseWithoutCard("Bon appetit!", "Bye Bye", true));
 }
 
 
