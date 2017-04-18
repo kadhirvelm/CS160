@@ -39,7 +39,7 @@ def send_new_recipe_request():
                 "ranking": "2",
             },
             headers={
-                "X-Mashape-Key": "lsXNp3esqlmshvusEZ18a8zjocHvp1NyJ5vjsneWnMuRCsK5Ja",
+                "X-Mashape-Key": "some key",
                 "Accept": "application/json",
             },
         )
