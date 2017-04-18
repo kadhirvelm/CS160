@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, request, make_response, session
 app = Flask(__name__)
 
@@ -39,7 +41,7 @@ def send_new_recipe_request():
                 "ranking": "2",
             },
             headers={
-                "X-Mashape-Key": "some key",
+                "X-Mashape-Key": os.environ.get('SPOON_KEY', 'None'),
                 "Accept": "application/json",
             },
         )
