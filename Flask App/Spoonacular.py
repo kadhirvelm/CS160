@@ -1,11 +1,13 @@
 import os
 
-from flask import Flask, jsonify, request, make_response, session
+from flask import Flask, jsonify, request, make_response
 app = Flask(__name__)
 from pyramda import pick, keys, getitem
 import requests
 
 app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
+
+data = {}
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -31,7 +33,7 @@ def handle_invalid_usage(error):
 @app.route("/recipes", methods=["GET", "POST"])
 def get_current_recipes():
     if request.method == 'GET':
-        return jsonify(session["recipes"] if "recipes" in session else {})
+        return jsonify(data["recipes"] if "recipes" in data else {})
     else:
         return send_new_recipe_request()
 
@@ -62,7 +64,7 @@ def send_new_recipe_request():
                 "Accept": "application/json",
             },
         )
-        session['recipes'] = response.json()
+        data['recipes'] = response.json()
         return jsonify(response.json())
     except requests.exceptions.RequestException:
         return('HTTP Request failed')
@@ -77,7 +79,7 @@ def check_valid_input(requestJSON):
         "type": ["main course", "side dish", "dessert", "appetizer", "salad", "bread", "breakfast", "soup", "beverage", "sauce", "drink", "" ],
     }
     requestJSON = pick(keys(possible_parameters), requestJSON)
-    session["filters"] = requestJSON
+    data["filters"] = requestJSON
     errors = []
     for key in requestJSON:
         if (key != 'excludeIngredients') and (key != 'includeIngredients') and (requestJSON[key] not in possible_parameters[key]):
@@ -86,12 +88,12 @@ def check_valid_input(requestJSON):
 
 @app.route("/filters", methods=["GET"])
 def get_current_filters():
-    return jsonify(session["filters"] if "filters" in session else {})
+    return jsonify(data["filters"] if "filters" in data else {})
 
 @app.route('/reset', methods=['GET'])
 def reset():
-    for key in session.keys():
-        session.pop(key)
+    for key in data.keys():
+        data.pop(key)
     return jsonify({ "message": "Reset Successfully" })
 
 if __name__ == "__main__":

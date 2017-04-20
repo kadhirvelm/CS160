@@ -3,32 +3,47 @@ import { routerReducer } from 'react-router-redux'
 
 import { 
 	FAILED_REQUEST,
-	RECIPE_REQUEST, RECIPE_SUCCESS,
-	NEW_RECIPE_REQUEST, NEW_RECIPE_SUCCESS,
-} from './AmazonActions'
+	FETCH_CURRENT_RECIPES_REQUEST, FETCH_CURRENT_RECIPES_SUCCESS,
+	FETCH_CURRENT_FILTERS_REQUEST, FETCH_CURRENT_FILTERS_SUCCESS,
+	SUBMIT_NEW_RECIPES_REQUEST, SUBMIT_NEW_RECIPES_SUCCESS,
+	RESET_REQUEST, RESET_SUCCESS
+} from './ServerActions'
 
 function serverActions(state = {
 	isFetching: false
 }, action) {
 	const fetch = {
 		isFetching: action.isFetching,
-		resetForm: action.resetForm ? action.resetForm : false,
 	}
 	switch (action.type) {
 		case FAILED_REQUEST:
 			return Object.assign({}, state, fetch, {
-				errorMessage: action.message,
+				message: action.message,
 			})
-		case RECIPE_REQUEST:
+		case FETCH_CURRENT_RECIPES_REQUEST:
 			return Object.assign({}, state, fetch)
-		case  RECIPE_SUCCESS:
+		case  FETCH_CURRENT_RECIPES_SUCCESS:
 			return Object.assign({}, state, fetch, {
-				data: action.data,
+				recipes: action.recipes,
 			})
-		case NEW_RECIPE_REQUEST:
+		case FETCH_CURRENT_FILTERS_REQUEST:
 			return Object.assign({}, state, fetch)
-		case NEW_RECIPE_SUCCESS:
+		case  FETCH_CURRENT_FILTERS_SUCCESS:
+			return Object.assign({}, state, fetch, {
+				filters: action.filters,
+			})
+		case SUBMIT_NEW_RECIPES_REQUEST:
 			return Object.assign({}, state, fetch)
+		case  SUBMIT_NEW_RECIPES_SUCCESS:
+			return Object.assign({}, state, fetch, {
+				recipes: action.recipes,
+			})
+		case RESET_REQUEST:
+			return Object.assign({}, state, fetch)
+		case RESET_SUCCESS:
+			return Object.assign({}, state, fetch, {
+				message: action.message
+			})
 		default:
 			return state
 	}
