@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import os
 
->>>>>>> 00fbfd21fe3352aebbd1e82ce5d4d5b057ac2698
 from flask import Flask, jsonify, request, make_response, session
 app = Flask(__name__)
 from pyramda import pick, keys, getitem
@@ -38,15 +35,6 @@ def get_current_recipes():
     else:
         return send_new_recipe_request()
 
-@app.route("/recipes", methods=["GET"])
-def get_current_recipes():
-	return jsonify(session["recipes"] if "recipes" in session else {})
-
-@app.route("/filters", methods=["GET"])
-def get_current_filters():
-    return jsonify(session["filters"] if "filters" in session else {})
-
-@app.route("/recipes/new", methods=['POST'])
 def send_new_recipe_request():
     try:
         valid_input = check_valid_input(request.json)
