@@ -7,7 +7,7 @@ import {
 	NEW_RECIPE_REQUEST, NEW_RECIPE_SUCCESS,
 } from './AmazonActions'
 
-function amazonDB(state = {
+function serverActions(state = {
 	isFetching: false
 }, action) {
 	const fetch = {
@@ -34,24 +34,10 @@ function amazonDB(state = {
 	}
 }
 
-import {
-	LOADING_RECIPE
-} from './WebsiteActions'
-
-function website(state = {}, action) {
-	switch(action.type){
-		case LOADING_RECIPE:
-			return Object.assign({}, state)
-		default:
-			return state
-	}
-}
-
 import { reducer } from 'redux-form'
 
 const proj3 = combineReducers({
-	amazonDB,
-	website,
+	serverActions,
 	routing: routerReducer,
 	form: reducer
 })

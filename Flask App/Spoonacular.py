@@ -7,19 +7,38 @@ import requests
 
 app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
 
-@app.route("/recipes", methods=["GET"])
+class InvalidUsage(Exception):
+    status_code = 400
+
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        rv = dict(self.payload or ())
+        rv['message'] = self.message
+        return rv
+
+@app.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+@app.route("/recipes", methods=["GET", "POST"])
 def get_current_recipes():
-	return jsonify(session["recipes"] if "recipes" in session else {})
+    if request.method == 'GET':
+        return jsonify(session["recipes"] if "recipes" in session else {})
+    else:
+        return send_new_recipe_request()
 
-@app.route("/filters", methods=["GET"])
-def get_current_filters():
-    return jsonify(session["filters"] if "filters" in session else {})
-
-@app.route("/recipes/new", methods=['POST'])
 def send_new_recipe_request():
     try:
         valid_input = check_valid_input(request.json)
-        if len(valid_input['errors']) > 0: return jsonify(valid_input['errors'])
+        if len(valid_input['errors']) > 0: raise InvalidUsage(valid_input['errors'], status_code=400)
         user_specified_parameters = valid_input['filters']
         response = requests.get(
             url="https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex",
@@ -65,11 +84,15 @@ def check_valid_input(requestJSON):
             errors.append({'Error with ' + key: "Expected one of: " + ', '.join(possible_parameters[key])})
     return {'filters': requestJSON, 'errors': errors }
 
+@app.route("/filters", methods=["GET"])
+def get_current_filters():
+    return jsonify(session["filters"] if "filters" in session else {})
+
 @app.route('/reset', methods=['GET'])
 def reset():
     for key in session.keys():
         session.pop(key)
-    return 'Reset Successfully'
+    return jsonify({ "message": "Reset Successfully" })
 
 if __name__ == "__main__":
 	app.run()

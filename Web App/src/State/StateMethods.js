@@ -1,7 +1,6 @@
 export function mapStateToProps(state) {
-	const { amazonDB, website } = state
+	const { serverActions } = state
 	return {
-		amazonDB,
-		website
+		serverActions,
 	}
 }
