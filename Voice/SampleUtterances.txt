@@ -25,6 +25,10 @@ NextStep next part
 NextStep next ingredient
 NextStep got that then what
 NextStep got it then what
+<<<<<<< HEAD
+=======
+NextStep next one
+>>>>>>> 00fbfd21fe3352aebbd1e82ce5d4d5b057ac2698
 NextStep next step
 NextStep alrighty
 NextStep then what
