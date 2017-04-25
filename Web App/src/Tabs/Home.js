@@ -1,15 +1,28 @@
 import React from 'react'
-
-import { Tabs, Tab } from 'material-ui/Tabs'
-import CircularProgress from 'material-ui/CircularProgress'
 import Flexbox from 'flexbox-react'
+import './Home.css'
 
-import { getRecipe, newRecipe } from '../State/AmazonActions'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import Recipes from './Recipes'
-import CreateRecipe from './CreateRecipe'
+import { mapStateToProps } from '../State/StateMethods'
+import { connect } from 'react-redux'
 
-import { chain, toLower } from 'ramda'
+import Filters from './Filters'
+import AllRecipes from './AllRecipes'
+import SpecificRecipe from './SpecificRecipe'
+
+import Dialog from 'material-ui/Dialog'
+import FlatButton from 'material-ui/FlatButton'
+import RaisedButton from 'material-ui/RaisedButton'
+import CircularProgress from 'material-ui/CircularProgress'
+
+import { 
+  getCurrentRecipes, 
+  getCurrentFilters, 
+  reset, 
+  submitNewRecipe, 
+  setFinalRecipe, getFinalRecipe 
+} from '../State/ServerActions'
 
 class Home extends React.Component {
 
@@ -21,93 +34,112 @@ class Home extends React.Component {
   propsConst = (props) => {
     return({
       dispatch: props.dispatch,
-      isFetching: props.isFetching,
-      autoCompleteDataSource: this.state ? this.state.autoCompleteDataSource : [],
-      tiles: this.state ? this.state.tiles : [],
-      resetForm: props.resetForm,
-    })
-  }
-
-  componentWillMount(){
-    this.refreshContents()
-  }
-
-  refreshContents = () => {
-    const getRecipes = this.getAllRecipes(this.state)
-    getRecipes.then( (values) => {
-      const organizeTiles = (entry) => entry.RecipeName
-      const autoCompleteDataSource = chain(organizeTiles, values.Items)
-      this.setState({ autoCompleteDataSource: autoCompleteDataSource, tiles: values.Items })
-    })
-  }
-
-  getAllRecipes = (state) => {
-    return new Promise( function(resolve) {
-      state.dispatch(getRecipe(resolve))
+      isFetching: props.serverActions.isFetching,
+      message: props.serverActions.message,
+      recipes: props.serverActions.recipes,
+      filters: props.serverActions.filters,
+      final_recipe: props.serverActions.final_recipe,
+      currentStep: this.state ? this.state.currentStep : 0,
+      openWarning: this.state ? this.state.openWarning : false,
     })
   }
 
   componentWillReceiveProps(nextProps){
     this.setState(this.propsConst(nextProps))
-    if (nextProps.resetForm) {
-      this.refreshContents()
+  }
+
+  getCurrentRecipes = () => { this.state.dispatch(getCurrentRecipes()) }
+
+  getCurrentFilters = () => { this.state.dispatch(getCurrentFilters()) }
+
+  reset = (callback) => { this.state.dispatch(reset(callback)) }
+  
+  submitNewRecipe = (filters) => { this.state.dispatch(submitNewRecipe(filters)) }
+
+  setFinalRecipe = (recipe) => { this.state.dispatch(setFinalRecipe(recipe, this.getFinalRecipe )) }
+
+  getFinalRecipe = () => { this.state.dispatch(getFinalRecipe()) }
+
+  setViewingRecipe = (recipe) => { this.setState({ viewingRecipe: recipe }) }
+
+  setZeroStep = () => { this.setState({ currentStep: 0 }) }
+  newSelection = () => { this.reset(this.setZeroStep) }
+
+  nextStep = () => { this.setState({ currentStep: ++this.state.currentStep }) }
+  previousStep = () => { this.setState({ currentStep: --this.state.currentStep }) }
+
+  currentStep = () => {
+    switch (this.state.currentStep){
+      case 0:
+        return <Filters key='Filters' nextStep={ this.nextStep } getCurrentFilters={ this.getCurrentFilters } 
+        filters={ this.state.filters } />
+      case 1:
+        return <AllRecipes key='AllRecipes' nextStep={ this.nextStep } previousStep={ this.previousStep } 
+        getCurrentRecipes={ this.getCurrentRecipes } getFinalRecipe={ this.setFinalRecipe } 
+        recipes={ this.state.recipes } setViewingRecipe={ this.setViewingRecipe } />
+      case 2:
+        return <SpecificRecipe key='SpecificRecipe' previousStep={ this.previousStep } setFinalRecipe={ this.setFinalRecipe } 
+        viewingRecipe={ this.state.viewingRecipe } final_recipe={ this.state.final_recipe } newSelection={ this.newSelection } />
+      default:
+        return <div> Oops, something went wrong </div>
     }
   }
 
-  handleRequest = (value) => {
-    console.log(value)
+  changeWarning = () => {
+    this.setState({ openWarning: !this.state.openWarning })
   }
 
-  handleSubmit = (values) => {
-    this.setState({ isFetching: true })
-    const uploadFile = this.upload(values.recipeImage.item(0))
-    uploadFile.then( (link) => {
-      const newRecipe = {
-        RecipeName: toLower(values.recipeNameText),
-        URL: link,
-        Ingredients: values.ingredientsList,
-        Directions: values.directions,
-      }
-      this.dispatchAction(newRecipe)
-    })
-  }
-
-  dispatchAction = (newDBEntry) => { this.state.dispatch(newRecipe(newDBEntry)) }
-
-  upload(file) {
-    return new Promise( function(resolve) {
-      var fd = new FormData()
-      fd.append("image", file)
-      var xhr = new XMLHttpRequest()
-      xhr.open("POST", "https://api.imgur.com/3/image.json")
-      xhr.onload = function() {
-        resolve(JSON.parse(xhr.responseText).data.link)
-      }
-      xhr.setRequestHeader('Authorization', 'Client-ID 28aaa2e823b03b1')
-      xhr.send(fd)
-    })
-  }
+  resetApp = () => { this.reset(this.changeWarning) }
 
   render() {
+    const actions = [
+      <FlatButton
+        label='Cancel'
+        secondary={ true }
+        onTouchTap={ this.changeWarning }
+      />,
+      <FlatButton
+        label='Yes'
+        primary={ true }
+        onTouchTap={ this.resetApp }
+      />,
+    ]
     return (
       <Flexbox flexDirection='column'>
-        <Tabs>
-          <Tab label='View Recipes'>
-            <Recipes autoCompleteDataSource={ this.state.autoCompleteDataSource } tiles={ this.state.tiles } />
-          </Tab>
-          <Tab label='Create Recipe'>
-            { this.state.isFetching && 
+        <Flexbox flexDirection='row' style={ { marginBottom: '10px' } }>
+          <Flexbox flexGrow={ 1 }>
+          </Flexbox>
+          <Flexbox justifyContent='center' flexGrow={ 2 }>
+            Hello CS 160
+          </Flexbox>
+          <Flexbox flexGrow={ 1 } justifyContent='flex-end'>
+            { this.state.isFetching &&
               <CircularProgress />
             }
-            <CreateRecipe onSubmit={ this.handleSubmit } resetForm={ this.state.resetForm } />
-          </Tab>
-          <Tab label='Settings'>
-            Settings Go Here
-          </Tab>
-        </Tabs>
+          </Flexbox>
+        </Flexbox>
+        <ReactCSSTransitionGroup
+            transitionName='example'
+            transitionEnterTimeout={ 500 }
+            transitionLeaveTimeout={ 300 }>
+          <Flexbox key={ this.state.currentStep } style={ { marginTop: '10px' } }>
+            { this.currentStep() }
+          </Flexbox>
+        </ReactCSSTransitionGroup>
+        <Flexbox>
+          <RaisedButton label='Reset' onClick={ this.changeWarning } fullWidth={ true } />
+        </Flexbox>
+        <Dialog
+          title='Reset Sous Chef?'
+          actions={ actions }
+          modal={ true }
+          open={ this.state.openWarning }
+        >
+          Are you sure you want to reset Sous Chef? You can't undo this action.
+        </Dialog>
       </Flexbox>
     );
   }
 }
 
-export default Home
+export default connect(mapStateToProps)(Home)
