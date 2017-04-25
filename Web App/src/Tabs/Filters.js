@@ -4,7 +4,7 @@ import './Home.css'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
-import { keys, pick, values } from 'ramda'
+import { keys, pick, values, head } from 'ramda'
 
 class Filters extends React.Component {
 
@@ -41,21 +41,32 @@ class Filters extends React.Component {
     this.setState(this.propsConst(nextProps))
   }
 
+  filters = (key) => {
+    return key in this.state.filters ? head(values(pick([ key ], this.state.filters))) : []
+  }
+
   render() {
     return (
       <Flexbox flexDirection='column' flexGrow={ 1 } style={ { margin: '10px' } }>
         <Flexbox justifyContent='flex-end' style={ { margin: '5px' } } >
           <RaisedButton label='Refresh' onClick={ this.state.getCurrentFilters } />
         </Flexbox>
-        <Flexbox flexDirection='column' alignItems='center'>
-          <h3> Selected Filters </h3>
+        <Flexbox flexDirection='column' flexGrow={ 1 } >
+          <Flexbox justifyContent='center'>
+            <h3> Selected Filters </h3>
+          </Flexbox>
           { keys(this.possible_parameters()).map( (key, index) => (
-            <Flexbox flexDirection='row' flexGrow={ 1 } key={ index }> 
-            <p> { key } &nbsp; </p> {
-              values(pick([ key ], this.state.filters)).map( (filter, index) => (
-                <font key={ index }> { filter } </font>
-              ))
-            }
+            <Flexbox flexDirection='row' alignItems='center' flexGrow={ 1 } key={ index }>
+              <Flexbox flexDirection='row' justifyContent='flex-end' flexBasis='50%'>
+                <p> { key }: &nbsp; </p>
+              </Flexbox>
+              <Flexbox justifyContent='flex-start' flexBasis='50%'>
+                {
+                  (this.filters(key)).map( (filter, index) => (
+                    <font key={ index }> { filter }, &nbsp; </font>
+                  ))
+                }
+              </Flexbox>
             </Flexbox>
             ))
           }

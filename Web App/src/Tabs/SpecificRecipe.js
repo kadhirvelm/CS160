@@ -41,33 +41,35 @@ class SpecificRecipe extends React.Component {
       />,
     ]
     return (
-      <Flexbox flexDirection='column' flexGrow={ 1 } alignItems='center' style={ { margin: '10px' } }>
-        <Flexbox flexDirection='row'>
+      <Flexbox flexDirection='column' flexGrow={ 1 } style={ { margin: '10px' } }>
+        <Flexbox flexDirection='row' justifyContent='center'>
           { this.state.viewingRecipe.title }
         </Flexbox>
-        <Flexbox>
-          <img src={ this.state.viewingRecipe.image } style={ { maxHeight: '400px', width: 'auto' } }/>
+        <Flexbox justifyContent='center'>
+          <img src={ this.state.viewingRecipe.image } style={ { maxHeight: '400px', width: 'auto', border: 'grey', borderWidth: '1px', borderStyle: 'solid' } }/>
         </Flexbox>
-        <Flexbox flexDirection='column' alignItems='center'>
+        <Flexbox flexDirection='column' alignItems='center' justifyContent='center'>
           <div>
             Preparation: { this.state.viewingRecipe.preparationMinutes }
           </div>
           <div>
             Ready in: { this.state.viewingRecipe.readyInMinutes }
           </div>
-          <div> 
-            <img src='http://clipartix.com/wp-content/uploads/2016/04/Thumbs-up-clipart-cliparts-for-you.jpg' height='20' width='20' /> { this.state.viewingRecipe.aggregateLikes } 
-          </div>
+          <Flexbox alignItems='center'> 
+            <img src='http://clipartix.com/wp-content/uploads/2016/04/Thumbs-up-clipart-cliparts-for-you.jpg' height='20' width='20' /> &nbsp; { this.state.viewingRecipe.aggregateLikes } 
+          </Flexbox>
         </Flexbox>
-        <Flexbox flexDirection='column' alignItems='flex-start' style={ { margin: '10px' } }>
-        { head(this.state.viewingRecipe.analyzedInstructions).steps.map( (entry, index) => (
-          <div key={ index }> { index + 1 } : { entry.step } </div>
-          )) 
-        }
+        <Flexbox flexDirection='column' style={ { margin: '15px' } }>
+          { head(this.state.viewingRecipe.analyzedInstructions).steps.map( (entry, index) => (
+            <Flexbox key={ index }> { index + 1 } : { entry.step } </Flexbox>
+            )) 
+          }
         </Flexbox>
-        <Flexbox flexDirection='column' justifyContent='center'>
-          <RaisedButton label='Cook It!' onClick={ this.setFinalRecipe } style={ { margin: '7px' } }/>
-          <RaisedButton label='Back' onClick={ this.state.previousStep } />
+        <Flexbox flexDirection='column' flexGrow={ 1 } justifyContent='center'>
+          <RaisedButton label='Cook It!' onClick={ this.setFinalRecipe } fullWidth={ true } style={ { margin: '7px' } }/>
+          <Flexbox justifyContent='center'>
+            <RaisedButton label='Back' onClick={ this.state.previousStep } />
+          </Flexbox>
         </Flexbox>
         <Dialog
           title='Cooking'
