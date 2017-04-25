@@ -18,7 +18,7 @@ const styles = {
     justifyContent: 'space-around',
   },
   gridList: {
-    width: 1000,
+    width: 1350,
     height: 800,
     overflowY: 'auto',
   },
@@ -61,10 +61,10 @@ class AllRecipes extends React.Component {
   render() {
     return (
       <Flexbox flexDirection='column' flexGrow={ 1 } style={ { margin: '10px' } }>
-        <RaisedButton label='Refresh' onClick={ this.state.getCurrentRecipes } style={ { margin: '5px' } }/>
         <Flexbox flexDirection='row' flexGrow={ 1 } style={ styles.root }>
           <GridList
             cellHeight={ 180 }
+            cols={ 3 }
             style={ styles.gridList }>
             { (this.state.recipes).map( (entry, index) => (
                 <GridTile key={ index } title={ entry.title } subtitle={ entry.creditText } onClick={ this.currySpecificRecipe(entry) }>
@@ -74,7 +74,9 @@ class AllRecipes extends React.Component {
             }
           </GridList>
         </Flexbox>
-        <RaisedButton label='Back' onClick={ this.state.previousStep } />
+        <Flexbox>
+          <RaisedButton label='Back' onClick={ this.state.previousStep } style={ { marginTop: '5px' } }/>
+        </Flexbox>
       </Flexbox>
     );
   }

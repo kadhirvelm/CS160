@@ -65,8 +65,8 @@ class SpecificRecipe extends React.Component {
           )) 
         }
         </Flexbox>
-        <Flexbox justifyContent='flex-end'>
-          <RaisedButton label='Cook It!' onClick={ this.setFinalRecipe } style={ { marginRight: '7px' } }/>
+        <Flexbox flexDirection='column' justifyContent='center'>
+          <RaisedButton label='Cook It!' onClick={ this.setFinalRecipe } style={ { margin: '7px' } }/>
           <RaisedButton label='Back' onClick={ this.state.previousStep } />
         </Flexbox>
         <Dialog

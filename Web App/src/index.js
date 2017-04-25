@@ -12,6 +12,8 @@ import { saveState, loadState } from './State/StateStoreLoad'
 
 import * as _colors from 'material-ui/styles/colors'
 
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { getMuiTheme } from 'material-ui/styles'
 import { fade } from 'material-ui/utils/colorManipulator'
@@ -27,12 +29,12 @@ store.subscribe( () => {
 injectTapEventPlugin()
 
 const muiTheme = getMuiTheme({
-  fontFamily: 'FiraSans-Regular',
+  fontFamily: 'Overlock-Regular',
   palette: {
     primary1Color: _colors.red600,
     primary2Color: _colors.teal600,
     primary3Color: _colors.grey400,
-    accent1Color: _colors.pinkA200,
+    accent1Color: _colors.blue300,
     accent2Color: _colors.grey100,
     accent3Color: _colors.grey500,
     textColor: _colors.darkBlack,
@@ -49,7 +51,7 @@ const muiTheme = getMuiTheme({
 
 ReactDOM.render((
   <Provider store={ store }>
-  	<MuiThemeProvider muiTheme={ muiTheme }>
+  	<MuiThemeProvider muiTheme={ getMuiTheme(darkBaseTheme) }>
     	<App />
     </MuiThemeProvider>
   </Provider>),

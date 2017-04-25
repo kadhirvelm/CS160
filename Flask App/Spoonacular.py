@@ -30,7 +30,7 @@ class InvalidUsage(Exception):
 @app.route('/final_recipe', methods=['GET', 'POST'] )
 def set_final_recipe():
     if request.method == 'GET':
-        return jsonify(data['final_recipe'])
+        return jsonify(data['final_recipe']) if 'final_recipe' in data else jsonify({ 'message': 'Error, user hasn\'t selected recipe' })
     else:
         final_recipe = pick(['final_recipe'], request.json)
         data['final_recipe'] = final_recipe

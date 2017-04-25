@@ -1,5 +1,6 @@
 import React from 'react'
 import Flexbox from 'flexbox-react'
+import './Home.css'
 
 import RaisedButton from 'material-ui/RaisedButton'
 
@@ -46,15 +47,19 @@ class Filters extends React.Component {
         <Flexbox justifyContent='flex-end' style={ { margin: '5px' } } >
           <RaisedButton label='Refresh' onClick={ this.state.getCurrentFilters } />
         </Flexbox>
-        { keys(this.possible_parameters()).map( (key, index) => (
-          <Flexbox flexDirection='row' flexGrow={ 1 } key={ index }> { key }: &nbsp; {
-            values(pick([ key ], this.state.filters)).map( (filter, index) => (
-              <div key={ index }> { filter } </div>
+        <Flexbox flexDirection='column' alignItems='center'>
+          <h3> Selected Filters </h3>
+          { keys(this.possible_parameters()).map( (key, index) => (
+            <Flexbox flexDirection='row' flexGrow={ 1 } key={ index }> 
+            <p> { key } &nbsp; </p> {
+              values(pick([ key ], this.state.filters)).map( (filter, index) => (
+                <font key={ index }> { filter } </font>
+              ))
+            }
+            </Flexbox>
             ))
           }
-          </Flexbox>
-          ))
-        }
+        </Flexbox>
         <Flexbox justifyContent='flex-end'>
           <RaisedButton label='Next' onClick={ this.state.nextStep } />
         </Flexbox>

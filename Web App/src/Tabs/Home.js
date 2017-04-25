@@ -126,9 +126,6 @@ class Home extends React.Component {
             { this.currentStep() }
           </Flexbox>
         </ReactCSSTransitionGroup>
-        <Flexbox>
-          <RaisedButton label='Reset' onClick={ this.changeWarning } fullWidth={ true } />
-        </Flexbox>
         <Dialog
           title='Reset Sous Chef?'
           actions={ actions }

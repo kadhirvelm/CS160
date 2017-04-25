@@ -15,3 +15,14 @@
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
+
+p {
+  margin: 3;
+  padding: 3;
+  font-family: OverlockSC-Regular;
+}
+
+html *
+{
+   font-family: OverlockSC-Regular !important;
+}
