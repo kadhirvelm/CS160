@@ -17,12 +17,12 @@ import { getMuiTheme } from 'material-ui/styles'
 import { fade } from 'material-ui/utils/colorManipulator'
 
 let createStoreWithThunk = applyMiddleware(thunkMiddleware)(createStore)
-//const persistedState = loadState()
-let store = createStoreWithThunk(proj3)
+const persistedState = loadState()
+let store = createStoreWithThunk(proj3, persistedState)
 
-// store.subscribe( () => {
-// 	saveState(store.getState())
-// })
+store.subscribe( () => {
+	saveState(store.getState())
+})
 
 injectTapEventPlugin()
 
@@ -30,7 +30,7 @@ const muiTheme = getMuiTheme({
   fontFamily: 'FiraSans-Regular',
   palette: {
     primary1Color: _colors.red600,
-    primary2Color: _colors.red600,
+    primary2Color: _colors.teal600,
     primary3Color: _colors.grey400,
     accent1Color: _colors.pinkA200,
     accent2Color: _colors.grey100,
