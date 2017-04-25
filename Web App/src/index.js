@@ -17,12 +17,12 @@ import { getMuiTheme } from 'material-ui/styles'
 import { fade } from 'material-ui/utils/colorManipulator'
 
 let createStoreWithThunk = applyMiddleware(thunkMiddleware)(createStore)
-const persistedState = loadState()
-let store = createStoreWithThunk(proj3, persistedState)
+//const persistedState = loadState()
+let store = createStoreWithThunk(proj3)
 
-store.subscribe( () => {
-	saveState(store.getState())
-})
+// store.subscribe( () => {
+// 	saveState(store.getState())
+// })
 
 injectTapEventPlugin()
 

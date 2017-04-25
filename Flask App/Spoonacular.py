@@ -1,9 +1,12 @@
 import os
 
 from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 from pyramda import pick, keys, getitem
 import requests
+
+CORS(app)
 
 app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
 
@@ -45,12 +48,12 @@ def send_new_recipe_request():
         response = requests.get(
             url="https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex",
             params={
-                "cuisine": user_specified_parameters.get("cuisine") or "",
-                "diet": user_specified_parameters.get("diet") or "",
-                "excludeIngredients": user_specified_parameters.get("excludeIngredients") or "",
-                "includeIngredients": user_specified_parameters.get("includeIngredients") or "",
-                "intolerances": user_specified_parameters.get("intolerances") or "",
-                "type": user_specified_parameters.get("type") or "",
+                "cuisine": user_specified_parameters.get("cuisine", ""),
+                "diet": user_specified_parameters.get("diet", ""),
+                "excludeIngredients": user_specified_parameters.get("excludeIngredients", ""),
+                "includeIngredients": user_specified_parameters.get("includeIngredients", ""),
+                "intolerances": user_specified_parameters.get("intolerances", ""),
+                "type": user_specified_parameters.get("type", ""),
                 "fillIngredients": "true",
                 "addRecipeInformation": "true",
                 "instructionsRequired": "true",

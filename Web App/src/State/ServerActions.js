@@ -142,7 +142,7 @@ function resetRequest(){
 	}
 }
 
-function resetSuccess(recipes){
+function resetSuccess(message){
 	return {
 		type: RESET_SUCCESS,
 		isFetching: false,

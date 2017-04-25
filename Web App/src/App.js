@@ -1,9 +1,5 @@
 import React from 'react'
-import { mapStateToProps } from './State/StateMethods'
-import { connect } from 'react-redux'
-
 import Home from './Tabs/Home'
-
 import Flexbox from 'flexbox-react'
 
 class App extends React.Component {
@@ -16,10 +12,6 @@ class App extends React.Component {
   propsConst = (props) => {
     return ({
       dispatch: props.dispatch,
-      isFetching: props.amazonDB.isFetching,
-      allRecipes: props.amazonDB.data,
-      errorMessage: props.amazonDB.errorMessage,
-      resetForm: props.amazonDB.resetForm,
     })
   }
 
@@ -30,10 +22,10 @@ class App extends React.Component {
   render() {
     return (
       <Flexbox flexDirection='column'>
-        <Home dispatch={ this.state.dispatch } isFetching={ this.state.isFetching } allRecipes={ this.state.allRecipes } resetForm={ this.state.resetForm } />
+        <Home dispatch={ this.state.dispatch } />
       </Flexbox>
     )
   }
 }
 
-export default connect(mapStateToProps)(App)
+export default App
