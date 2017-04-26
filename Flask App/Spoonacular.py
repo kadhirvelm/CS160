@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, abort
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 from pyramda import pick, keys, getitem
@@ -35,6 +35,22 @@ def set_final_recipe():
         final_recipe = pick(['final_recipe'], request.json)
         data['final_recipe'] = final_recipe
         return jsonify({ 'message': 'Successfully selected recipe' })
+
+@app.route('/choose/<int:rid>', methods=['GET', 'POST'] )
+def get_recipe_with_id(rid):
+    # Bad practice to modify on GET, but w/e
+    if 'recipes' not in data:
+        # Todo just query for the right one
+        return jsonify({'message': 'No original query'}), 400
+
+    filtered = [r for r in data['recipes']['results'] if r.get('id') == rid]
+    if not filtered:
+        return jsonify({'message': 'Doesnt exist'}), 400
+
+    final_recipe = filtered[0]
+    data['final_recipe'] = final_recipe
+    return jsonify(final_recipe)
+
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
