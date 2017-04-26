@@ -1,0 +1,135 @@
+HelpIntent Help
+HelpIntent What can I say
+HelpIntent What do I say
+
+IngredientList I have {Ingredient}
+IngredientList I have {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} and {Ingredient}
+
+IngredientList Give me something that uses {Ingredient}
+IngredientList Give me something that uses {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} and {Ingredient}
+
+IngredientList I want a recipe that uses {Ingredient}
+IngredientList I want a recipe that uses {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} and {Ingredient}
+
+IngredientList What can I make with {Ingredient}
+IngredientList {Ingredient} and  {Ingredient}
+IngredientList What can I make with {Ingredient} and {Ingredient}
+IngredientList What can I make with {Ingredient}  {Ingredient} {Ingredient}
+IngredientList What can I make with {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} and {Ingredient}
+
+IngredientList I want to make something that does not have {Ingredient}
+IngredientList I want to make something that does not have {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} {Ingredient} and {Ingredient}
+
+TimeConstraint I want to make something quick
+TimeConstraint I have {fifteen|time} minutes.
+TimeConstraint I only have {twenty two|time} minutes.
+TimeConstraint {thirty|time} minutes.
+TimeConstraint {thiry|time} hours.
+TimeConstraint I want to make something that takes {twenty two|time} minutes or less
+TimeConstraint I'm in a hurry. what can I make
+TimeConstraint I'm in a hurry. what can I make
+TimeConstraint Give me something that only takes {twelve|time} minutes
+TimeConstraint What about something that takes {eighteen|time} minutes
+TimeConstraint What about something that takes {twenty nine|time} an hour
+TimeConstraint That takes too much time. Give me a shorter recipe
+
+MealFilter I want to eat {meal}
+MealFilter Can you give me something to eat for {meal}
+MealFilter I want something for {meal}
+MealFilter Give me a {meal} item
+MealFilter Give me a {meal} recipe
+
+CuisineFilter I'm in the mood for {cuisine} food
+CuisineFilter I'm feeling {cuisine}
+CuisineFilter I want {cuisine} food
+CuisineFilter I want {cuisine} or {cuisine} food
+
+RatingFilter I want a {rating} star recipe
+RatingFilter I want to eat something delicious
+
+DietaryConstraint I can't eat {peanuts|constraint}
+DietaryConstraint I'll die if I have {peanuts|constraint} {soy|constraint} and {milk|constraint}
+DietaryConstraint I'm allergic {peanuts|constraint} {soy|constraint} and {milk|constraint}
+DietaryConstraint I'm can't eat {peanuts|constraint} {fish|constraint} and {soy|constraint}
+DietaryConstraint I'm allergic to {peanuts|constraint} {milk|constraint} and {fish|constraint}
+DietaryConstraint I can't drink {milk|constraint}
+DietaryConstraint I have allergies to {peanuts|constraint} and {chocolate|constraint}
+
+DietaryConstraint I'm allergic to {peanuts|constraint}
+DietaryConstraint Give me a recipe that does not have {peanuts|constraint}
+DietaryConstraint Give me a recipe that does not have {peanuts|constraint} {oreos|constraint} {eggs|constraint} and {milk|constraint}
+
+IngredientsQuery Ingredients
+IngredientsQuery What are the ingredients
+IngredientsQuery What ingredients are there
+IngredientsQuery which ingredients
+
+NextStep next
+NextStep next part
+NextStep next ingredient
+NextStep next step
+NextStep then what
+NextStep what's next
+LastStep last
+LastStep last ingredient
+LastStep last step
+LastStep wait say that again
+LastStep can you repeat that one
+LastStep one more time
+LastStep what's the last part
+LastStep what's last
+StartOver start again
+StartOver start over
+StartOver restart
+MainMenuIntent main menu
+MainMenuIntent take me back to main menu
+MainMenuIntent go to main menu
+QuitIntent quit
+QuitIntent abort
+QuitIntent exit
+QuitIntent i give up
+StartReading start
+StartReading start recipe
+StartReading recipe instructions
+StartReading recipe steps
+StartReading read instructions
+StartReading read recipe
+StartReading begin recipe
+
+ListRecipies ok what are those results
+ListRecipies list recipes
+ListRecipies what are those recipes
+ListRecipies read off recipes
+ListRecipies list the results
+ListRecipies read off results
+ListRecipies I don't have a device on me
+ListRecipies I can't go to the website
+ListRecipies please list them
+
+
+NoIntent no
+NoIntent nope
+NoIntent negative
+NoIntent i'd rather not
+NoIntent I don't think so
+NoIntent nah
+NoIntent I'm good
+NoIntent that's all
+NoIntent I'll pass
+NoIntent hard pass
+NoIntent that's a hard pass
+NoIntent I can't
+NoIntent sorry no
+NoIntent no thanks
+
+YesIntent yes
+YesIntent that sounds good
+YesIntent great lets do that
+YesIntent that sounds delicious ok
+YesIntent cool
+YesIntent aight
+YesIntent yeah
+YesIntent heck yeah
+YesIntent amazing yeah
+YesIntent lets do this
+

@@ -1,0 +1,115 @@
+{
+  "intents": [
+    {
+      "intent": "HelpIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "Ingredient",
+          "type": "Ingredients"
+        }
+      ],
+      "intent": "IngredientList"
+    },
+    {
+      "slots": [
+        {
+          "name": "time",
+          "type": "AMAZON.LITERAL"
+        }
+      ],
+      "intent": "TimeConstraint"
+    },
+    {
+      "slots": [
+        {
+          "name": "meal",
+          "type": "MealType"
+        }
+      ],
+      "intent": "MealFilter"
+    },
+    {
+      "slots": [
+        {
+          "name": "cuisine",
+          "type": "CuisineList"
+        }
+      ],
+      "intent": "CuisineFilter"
+    },
+    {
+      "intent": "ListRecipies"
+    },
+    {
+      "slots": [
+        {
+          "name": "rating",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "RatingFilter"
+    },
+    {
+      "slots": [
+        {
+          "name": "constraint",
+          "type": "AMAZON.LITERAL"
+        }
+      ],
+      "intent": "DietaryConstraint"
+    },
+    {
+      "slots": [
+        {
+          "name": "cuisine",
+          "type": "CuisineList"
+        },
+        {
+          "name": "meal",
+          "type": "MealType"
+        },
+        {
+          "name": "time",
+          "type": "AMAZON.LITERAL"
+        },
+        {
+          "name": "Ingredient",
+          "type": "Ingredients"
+        }
+      ],
+      "intent": "CombinedFilter"
+    },
+    {
+      "intent": "IngredientsQuery"
+    },
+    {
+      "intent": "NextStep"
+    },
+    {
+      "intent": "LastStep"
+    },
+    {
+      "intent": "StartOver"
+    },
+    {
+      "intent": "MainMenuIntent"
+    },
+    {
+      "intent": "QuitIntent"
+    },
+    {
+      "intent": "StartReading"
+    },
+    {
+      "intent": "SubmitRecipe"
+    },
+    {
+      "intent": "YesIntent"
+    },
+    {
+      "intent": "NoIntent"
+    }
+  ]
+}

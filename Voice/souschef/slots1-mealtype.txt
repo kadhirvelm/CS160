@@ -1,0 +1,7 @@
+MealType
+Breakfast
+Lunch
+Dinner
+Dessert
+Appetizer
+Brunch
