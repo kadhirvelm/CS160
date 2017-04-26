@@ -32,7 +32,7 @@ function getRequest(url, callback) {
     });
 }
 
-function getFinalRecipie(cb) {
+function getFinalRecipe(cb) {
     getRequest("https://"+FLASK_APP + "/final_recipe", function (success, data) {
         if (success) {
             cb(data)
@@ -76,51 +76,51 @@ function resetFlaskApp(cb) {
 function postToFlask(data, cb, errorCB) {
         (function(callback) {
             'use strict';
-                
+
             const httpTransport = require('https');
             const responseEncoding = 'utf8';
-            
+
             const bodyData = JSON.stringify(data);
             const httpOptions = {
                 hostname: FLASK_APP,
                 port: '443',
                 path: '/recipes',
                 method: 'POST',
-                headers: {"Content-Type":"application/json", 
+                headers: {"Content-Type":"application/json",
                           "Content-Length": bodyData.length}
             };
             httpOptions.headers['User-Agent'] = 'node ' + process.version;
-         
+
             // Paw Store Cookies option is not supported
-        
+
             const request = httpTransport.request(httpOptions, (res) => {
                 let responseBufs = [];
                 let responseStr = '';
-                
+
                 res.on('data', (chunk) => {
                     if (Buffer.isBuffer(chunk)) {
                         responseBufs.push(chunk);
                     }
                     else {
-                        responseStr = responseStr + chunk;            
+                        responseStr = responseStr + chunk;
                     }
                 }).on('end', () => {
-                    responseStr = responseBufs.length > 0 ? 
+                    responseStr = responseBufs.length > 0 ?
                         Buffer.concat(responseBufs).toString(responseEncoding) : responseStr;
-                    
+
                     callback(null, res.statusCode, res.headers, responseStr);
                 });
-                
+
             })
             .setTimeout(0)
             .on('error', (error) => {
                 callback(error);
             });
             request.end(bodyData);
-            
-        
+
+
         })((error, statusCode, headers, body) => {
-        console.log('ERROR:', error); 
+        console.log('ERROR:', error);
         console.log('STATUS:', statusCode);
         console.log('HEADERS:', JSON.stringify(headers));
         var resp = {}
@@ -148,7 +148,7 @@ function postToFlask(data, cb, errorCB) {
 // function makeSpoonSearch(data, cb) {
 //     (function(callback) {
 //         'use strict';
-            
+
 //         const httpTransport = https;
 //         const responseEncoding = 'utf8';
 //         const httpOptions = {
@@ -159,28 +159,28 @@ function postToFlask(data, cb, errorCB) {
 //             headers: {"X-Mashape-Key":"lsXNp3esqlmshvusEZ18a8zjocHvp1NyJ5vjsneWnMuRCsK5Ja","Accept":"application/json"}
 //         };
 //         httpOptions.headers['User-Agent'] = 'node ' + process.version;
-     
+
 //         // Paw Follow Redirects option is not supported
 //         // Paw Store Cookies option is not supported
-    
+
 //         const request = httpTransport.request(httpOptions, (res) => {
 //             let responseBufs = [];
 //             let responseStr = '';
-            
+
 //             res.on('data', (chunk) => {
 //                 if (Buffer.isBuffer(chunk)) {
 //                     responseBufs.push(chunk);
 //                 }
 //                 else {
-//                     responseStr = responseStr + chunk;            
+//                     responseStr = responseStr + chunk;
 //                 }
 //             }).on('end', () => {
-//                 responseStr = responseBufs.length > 0 ? 
+//                 responseStr = responseBufs.length > 0 ?
 //                     Buffer.concat(responseBufs).toString(responseEncoding) : responseStr;
-                
+
 //                 callback(null, res.statusCode, res.headers, responseStr);
 //             });
-            
+
 //         })
 //         .setTimeout(0)
 //         .on('error', (error) => {
@@ -188,10 +188,10 @@ function postToFlask(data, cb, errorCB) {
 //         });
 //         request.write("")
 //         request.end();
-        
-    
+
+
 //     })((error, statusCode, headers, body) => {
-//     console.log('ERROR:', error); 
+//     console.log('ERROR:', error);
 //     console.log('STATUS:', statusCode);
 //     console.log('HEADERS:', JSON.stringify(headers));
 //     cb(body)
@@ -210,21 +210,21 @@ function genFilters(attributes) {
     // }
     var filters = {}
     if (attributes.cuisine) {
-        filters.cuisine = attributes.cuisine.toLowerCase() ; 
+        filters.cuisine = attributes.cuisine.toLowerCase() ;
     }
     if (attributes.excludeIngredients) {
-        filters.excludeIngredients = attributes.excludeIngredients; 
+        filters.excludeIngredients = attributes.excludeIngredients;
     }
     if (attributes.includeIngredients) {
-        filters.includeIngredients = attributes.includeIngredients; 
+        filters.includeIngredients = attributes.includeIngredients;
     }
     // if (intolerances) {
-    //     filters.intolerances = intolerances; 
+    //     filters.intolerances = intolerances;
     // }
     if (attributes.meal) {
-        filters.type = attributes.meal.toLowerCase(); 
+        filters.type = attributes.meal.toLowerCase();
     }
-    return filters    
+    return filters
 }
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -241,7 +241,7 @@ exports.handler = function (event, context) {
     // if (event.session.application.applicationId !== "foobar") {
     //     context.fail("Invalid Application ID");
     // }
-        console.log(event) // for debugging; 
+        console.log(event) // for debugging;
 
         if (event.session.new) {
             onSessionStarted({requestId: event.request.requestId}, event.session);
@@ -322,7 +322,7 @@ function onIntent(intentRequest, session, callback) {
                 // todo change
         if (session.attributes && session.attributes.hasChosenRecipie) {
             session.attributes.inStepsMode = true;
-            // read steps 
+            // read steps
             readSteps(intent, session, callback);
         }
         else if (session.attributes && !session.attributes.filterEntryMode) {
@@ -337,6 +337,8 @@ function onIntent(intentRequest, session, callback) {
         nextStep(intent, session, callback);
     } else if ("LastStep" === intentName) {
         lastStep(intent, session, callback);
+    } else if ("SubmitRecipe" === intentName) {
+        handleWebChoice(intent, session, callback);
     } else if ("HelpIntent" === intentName) {
         handleGetHelpRequest(intent, session, callback);
     } else if ("StartOver" === intentName) {
@@ -383,7 +385,7 @@ function getSpecifiedIngredients(intent, session, callback) {
     }
     session.attributes.includeIngredients = queryIngredients;
     var output = "While I'm searching, do you have any other preferences?"
-                + " For example, you can tell me how much time you have" + 
+                + " For example, you can tell me how much time you have" +
                 " or what kind of cuisine you like";
     session.attributes.promptFor = 'time or cuisine';
 
@@ -399,7 +401,7 @@ function getTimeRestriction(intent, session, callback) {
         session.attributes = {};
     }
     session.attributes.timeConstraint = queryTime;
-    var output = "Got it. I will look for recipes that take less than " + queryTime + 
+    var output = "Got it. I will look for recipes that take less than " + queryTime +
                  " minutes. " + "Do you have any other preferences? ";
     return callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
@@ -418,7 +420,7 @@ function getCuisineType(intent, session, callback) {
     var output = "Ok sounds good . " + "Do you have any other preferences? ";
     return callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
-    
+
 }
 
 function getMealType(intent, session, callback) {
@@ -431,10 +433,10 @@ function getMealType(intent, session, callback) {
     session.attributes.meal = queryMeal.toLowerCase();
     var output = "Ok, I will look for " + queryMeal + "items. "
                 + "Do you have any other preferences? ";
-    
+
     return callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
-    
+
 }
 
 function getDietaryRestrictions(intent, session, callback) {
@@ -450,7 +452,7 @@ function getDietaryRestrictions(intent, session, callback) {
                  "that in mind. " + "Do you have any other preferences? ";
     return callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
-    
+
 }
 
 function getRating(intent, session, callback) {
@@ -465,7 +467,7 @@ function getRating(intent, session, callback) {
                 + "Do you have any other preferences?";
     return callback(session.attributes,
                 buildSpeechletResponse(CARD_TITLE, output, output, false));
-    
+
 }
 function readARecipie(intent, session, callback) {
     var index = session.attributes.foundRecipieInd;
@@ -490,9 +492,9 @@ function readARecipie(intent, session, callback) {
 
 function readSteps(intent, session, callback) {
     var index = session.attributes.recipieStepIndex;
-    
-    // Get the recipie by id 
-    
+
+    // Get the recipie by id
+
     if (!session.attributes.chosenRecipie.analyzedInstructions) {
         var output = "Awkard. There are no instructions for this recipe. Try restarting!";
         return    callback(session.attributes,
@@ -503,7 +505,7 @@ function readSteps(intent, session, callback) {
         var output = "There are no more steps. Enjoy your meal!";
         return    callback(session.attributes,
              buildSpeechletResponse("All Done!", output, output, true));
-        
+
     }
     // TODO - get the ingredients associated with this step
     var currStep = steps[index];
@@ -522,16 +524,16 @@ function readSteps(intent, session, callback) {
 function handleNo(intent, session, callback) {
     var output = "";
     if(session.attributes.isRecipieListing) {
-        // said no to a recipie; 
+        // said no to a recipie;
         session.attributes.foundRecipieInd += 1;
         return readARecipie(intent, session, callback);
     } else {
         session.attributes.filterEntryMode = false;
-        
+
         postToFlask(genFilters(session.attributes), function (data) {
             console.log("I found", data);
-            session.attributes.spoonResponse = true; 
-            
+            session.attributes.spoonResponse = true;
+
             var image = null;
             var recipieNames = [];
             var recipieImages = [];
@@ -541,13 +543,13 @@ function handleNo(intent, session, callback) {
             for (var i = 0; i < Math.min(50, data.results.length); i++) {
                 var currR = data.results[i];
                 if (!image && currR.image) {
-                    image = currR.image; 
+                    image = currR.image;
                 }
                 recipieNames.push(currR.title);
                 recipieImages.push(currR.image);
                 recipieIds.push(currR.id);
             }
-            
+
 
             session.attributes.recipieNames = recipieNames;
             session.attributes.recipieImages = recipieImages;
@@ -566,7 +568,7 @@ function handleNo(intent, session, callback) {
                 callback(session.attributes, buildSpeechletResponse(CARD_TITLE, output, output, false));
 
         })
-    } 
+    }
 }
 
 
@@ -576,32 +578,32 @@ function listRecipies(intent, session, callback) {
         session.attributes = {};
         return doConfusedResponse(intent, session, callback);
     }
-    
+
     return readARecipie(intent, session, callback);
 
 }
 
 function handleYes(intent, session, callback) {
     var output = "";
-    
+
     if (session.attributes.isRecipieListing) {
         var index = session.attributes.foundRecipieInd;
         var rid = session.attributes.recipieIds[index];
-        
-        
-        // TBD - get full thing from flask 
+
+
+        // TBD - get full thing from flask
         // session.attributes.chosenRecipie = session.attributes.foundRecipieObjs[index];
         chooseRecipeId(rid, function (data) {
             session.attributes.chosenRecipie = data;
-            
 
-            // TODO POST TO GUI 
+
+            // TODO POST TO GUI
             var output = "Great. Let's get cooking. When you are ready to start with the instructions say start recipe!";
-            
-            // TODO. You'll also need some other ingredients ... 
-        
+
+            // TODO. You'll also need some other ingredients ...
+
             session.attributes.inStepsMode = true;
-            session.attributes.isRecipieListing = false; 
+            session.attributes.isRecipieListing = false;
             session.attributes.recipieStepIndex = 0;
             session.attributes.hasChosenRecipie = true;
 
@@ -612,12 +614,45 @@ function handleYes(intent, session, callback) {
                     callback(session.attributes,
              buildSpeechletResponse(CARD_TITLE, output, output, false));
             }
-        
+
         })
     } else {
         return doConfusedResponse(intent, session, callback);
     }
-    
+
+}
+
+
+function handleWebChoice(intent, session, callback) {
+    var output = "";
+
+
+        // TBD - get full thing from flask
+        // session.attributes.chosenRecipie = session.attributes.foundRecipieObjs[index];
+        getFinalRecipe(function (data) {
+            session.attributes.chosenRecipie = data;
+
+
+            // TODO POST TO GUI
+            var output = "Great. Let's get cooking. When you are ready to start with the instructions say start recipe!";
+
+            // TODO. You'll also need some other ingredients ...
+
+            session.attributes.inStepsMode = true;
+            session.attributes.isRecipieListing = false;
+            session.attributes.recipieStepIndex = 0;
+            session.attributes.hasChosenRecipie = true;
+
+            if (data.image) {
+                    callback(session.attributes,
+             buildSpeechletResponse(data.title, output, output, false, data.image));
+            } else{
+                    callback(session.attributes,
+             buildSpeechletResponse(CARD_TITLE, output, output, false));
+            }
+
+        })
+
 }
 
 

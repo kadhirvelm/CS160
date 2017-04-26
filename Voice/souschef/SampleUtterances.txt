@@ -106,6 +106,14 @@ ListRecipies I don't have a device on me
 ListRecipies I can't go to the website
 ListRecipies please list them
 
+SubmitRecipe I chose it on the website
+SubmitRecipe Use the one I chose on souschef.com
+SubmitRecipe I selected it on the website
+SubmitRecipe I selected it on the app
+SubmitRecipe I found it on the app
+SubmitRecipe I found it on the tablet
+SubmitRecipe I made my choice
+SubmitRecipe I have made my choice
 
 NoIntent no
 NoIntent nope
