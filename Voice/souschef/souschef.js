@@ -156,7 +156,7 @@ function postToFlask(data, cb, errorCB) {
 //             port: '443',
 //             path: '/recipes/searchComplex?addRecipeInformation=true&cuisine=american&fillIngredients=true&includeIngredients=bagel&limitLicense=false&offset=0&ranking=2&type=breakfast',
 //             method: 'GET',
-//             headers: {"X-Mashape-Key":"lsXNp3esqlmshvusEZ18a8zjocHvp1NyJ5vjsneWnMuRCsK5Ja","Accept":"application/json"}
+//             headers: {"X-Mashape-Key":"","Accept":"application/json"}
 //         };
 //         httpOptions.headers['User-Agent'] = 'node ' + process.version;
 
