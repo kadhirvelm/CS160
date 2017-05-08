@@ -1,6 +1,6 @@
 import $ from 'jquery' 
 
-export const current_server = 'http://ac8f761c.ngrok.io'
+export const current_server = 'https://330d1d0b.ngrok.io'
 
 export const FAILED_REQUEST = 'FAILED_REQUEST'
 

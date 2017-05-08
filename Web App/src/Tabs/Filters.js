@@ -18,7 +18,7 @@ class Filters extends React.Component {
       dispatch: props.dispatch,
       nextStep: props.nextStep,
       getCurrentFilters: props.getCurrentFilters,
-      filters: (props.filters === undefined) ? [] : props.filters,
+      filters: (props.filters === undefined) ? {} : props.filters,
     })
   }
 
@@ -41,8 +41,8 @@ class Filters extends React.Component {
     this.setState(this.propsConst(nextProps))
   }
 
-  filters = (key) => {
-    return key in this.state.filters ? head(values(pick([ key ], this.state.filters))) : []
+  filled_filters = (key) => {
+    return key in this.state.filters ? values(pick([ key ], this.state.filters)) : [ 'None' ]
   }
 
   render() {
@@ -62,8 +62,8 @@ class Filters extends React.Component {
               </Flexbox>
               <Flexbox justifyContent='flex-start' flexBasis='50%'>
                 {
-                  (this.filters(key)).map( (filter, index) => (
-                    <font key={ index }> { filter }, &nbsp; </font>
+                  this.filled_filters(key).map( (filter, index) => (
+                    <font key={ index }> { filter } &nbsp; </font>
                   ))
                 }
               </Flexbox>
