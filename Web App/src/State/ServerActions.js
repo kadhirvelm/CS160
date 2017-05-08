@@ -1,6 +1,6 @@
 import $ from 'jquery' 
 
-export const current_server = 'api.statushawk.com'
+export const current_server = 'https://api.statushawk.com'
 
 export const FAILED_REQUEST = 'FAILED_REQUEST'
 
