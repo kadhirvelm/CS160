@@ -626,8 +626,7 @@ function handleYes(intent, session, callback) {
 function handleWebChoice(intent, session, callback) {
     var output = "";
 
-
-        // TBD - get full thing from flask
+        // get full thing from flask
         // session.attributes.chosenRecipie = session.attributes.foundRecipieObjs[index];
         getFinalRecipe(function (data) {
             session.attributes.chosenRecipie = data;

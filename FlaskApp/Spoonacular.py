@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, jsonify, request, make_response, abort
 from flask_cors import CORS, cross_origin
+
 app = Flask(__name__)
 from pyramda import pick, keys, getitem
 import requests
@@ -95,7 +96,7 @@ def send_new_recipe_request():
         data['recipes'] = response.json()
         return jsonify(response.json())
     except requests.exceptions.RequestException:
-        return jsonify({ 'message': 'HTTP Request failed'})
+        return jsonify({'message': 'HTTP Request failed'})
 
 def check_valid_input(requestJSON):
     possible_parameters = {
@@ -125,4 +126,4 @@ def reset():
     return jsonify({ 'message': 'Reset Successfully' })
 
 if __name__ == '__main__':
-	app.run()
+    app.run()
