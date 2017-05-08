@@ -314,7 +314,7 @@ function onIntent(intentRequest, session, callback) {
         getDietaryRestrictions(intent, session, callback);
     } else if ("RatingFilter" === intentName) {
         getRating(intent, session, callback);
-    } else if ("SubmitRecipie" === intentName) {
+    } else if ("SubmitRecipe" === intentName) {
         getRating(intent, session, callback); // todo change
     } else if ("ListRecipies" === intentName) {
         listRecipies(intent, session, callback);
