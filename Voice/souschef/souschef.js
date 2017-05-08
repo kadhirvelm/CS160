@@ -14,14 +14,156 @@ var querystring = require('querystring');
 var BASE_URL = 'https://ddx0dwb6p8.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate?TableName=Recipes'
 var FLASK_APP = 'api.statushawk.com'
 
+/* In case of failure */
+var default_recipe = {
+  "final_recipe": {
+    "aggregateLikes": 242,
+    "analyzedInstructions": [
+      {
+        "name": "",
+        "steps": [
+          {
+            "equipment": [],
+            "ingredients": [
+              {
+                "id": 2044,
+                "image": "https://spoonacular.com/cdn/ingredients_100x100/fresh-basil.jpg",
+                "name": "fresh basil"
+              },
+              {
+                "id": 11529,
+                "image": "https://spoonacular.com/cdn/ingredients_100x100/tomato.jpg",
+                "name": "tomato"
+              }
+            ],
+            "number": 1,
+            "step": "Slice tomatoes and bocconcini cheese. Or we like to tear up the cheese instead - it's a really nice texture when you eat it like this.On a platter, layer the tomatoes, bocconcini cheese and basil leaves."
+          },
+          {
+            "equipment": [],
+            "ingredients": [
+              {
+                "id": 2069,
+                "image": "https://spoonacular.com/cdn/ingredients_100x100/balsamic-vinegar.jpg",
+                "name": "balsamic vinegar"
+              },
+              {
+                "id": 1102047,
+                "image": "https://spoonacular.com/cdn/ingredients_100x100/salt-and-pepper.jpg",
+                "name": "salt and pepper"
+              },
+              {
+                "id": 4053,
+                "image": "https://spoonacular.com/cdn/ingredients_100x100/olive-oil.jpg",
+                "name": "olive oil"
+              }
+            ],
+            "number": 2,
+            "step": "Drizzle with olive oil & balsamic vinegar, or a balsamic vinegar reduction.Salt & pepper to taste."
+          },
+          {
+            "equipment": [],
+            "ingredients": [],
+            "number": 3,
+            "step": "Serve & enjoy!"
+          }
+        ]
+      }
+    ],
+    "cheap": false,
+    "creditText": "A Pretty Life in the Suburbs",
+    "cuisines": [],
+    "dairyFree": true,
+    "dishTypes": [
+      "side dish",
+      "salad"
+    ],
+    "gaps": "no",
+    "glutenFree": true,
+    "healthScore": 8,
+    "id": 524331,
+    "image": "https://spoonacular.com/recipeImages/Easy-Caprese-Salad-524331.jpg",
+    "imageType": "jpg",
+    "ketogenic": false,
+    "likes": 0,
+    "lowFodmap": true,
+    "missedIngredientCount": 2,
+    "missedIngredients": [
+      {
+        "aisle": "Oil, Vinegar, Salad Dressing",
+        "amount": 6,
+        "id": 2069,
+        "image": "https://spoonacular.com/cdn/ingredients_100x100/balsamic-vinegar.jpg",
+        "metaInformation": [],
+        "name": "balsamic vinegar",
+        "originalString": "balsamic vinegar or a balsamic vinegar reduction",
+        "unit": "servings",
+        "unitLong": "servings",
+        "unitShort": "servings"
+      },
+      {
+        "aisle": "Produce",
+        "amount": 1,
+        "id": 2044,
+        "image": "https://spoonacular.com/cdn/ingredients_100x100/fresh-basil.jpg",
+        "metaInformation": [
+          "fresh",
+          "large"
+        ],
+        "name": "fresh basil leaves",
+        "originalString": "large handful of fresh basil leaves",
+        "unit": "handful",
+        "unitLong": "handful",
+        "unitShort": "handful"
+      }
+    ],
+    "pricePerServing": 77.79,
+    "readyInMinutes": 45,
+    "servings": 6,
+    "sourceName": "A Pretty Life in the Suburbs",
+    "sourceUrl": "http://www.aprettylifeinthesuburbs.com/easy-caprese-salad-2/",
+    "spoonacularScore": 64,
+    "spoonacularSourceUrl": "https://spoonacular.com/easy-caprese-salad-524331",
+    "sustainable": false,
+    "title": "Backup Recipe: Easy Caprese Salad",
+    "unusedIngredients": [],
+    "usedIngredientCount": 1,
+    "usedIngredients": [
+      {
+        "aisle": "Produce",
+        "amount": 6,
+        "id": 11529,
+        "image": "https://spoonacular.com/cdn/ingredients_100x100/tomato.jpg",
+        "metaInformation": [],
+        "name": "vine ripened tomatoes",
+        "originalString": "6 vine ripened tomatoes, or 2 cups of grape tomatoes",
+        "unit": "",
+        "unitLong": "",
+        "unitShort": ""
+      }
+    ],
+    "vegan": true,
+    "vegetarian": true,
+    "veryHealthy": false,
+    "veryPopular": false,
+    "weightWatcherSmartPoints": 4,
+    "whole30": true
+  }
+}
+
 function getRequest(url, callback) {
     https.get(url, function(res) {
         res.on('data', function (data) {
+            if(Buffer.isBuffer(data)){
+                data = data.toString('utf8');
+            }
+            console.log("got", data);
+
             try {
                 data = JSON.parse(data);
             } catch (e) {
                 console.log("Error: ");
-                callback(false, "Invalid response from the flask app. " + data)
+                callback(true, default_recipe)
             }
             callback(true, data);
         });
@@ -627,8 +769,13 @@ function handleWebChoice(intent, session, callback) {
         // get full thing from flask
         // session.attributes.chosenRecipie = session.attributes.foundRecipieObjs[index];
         getFinalRecipe(function (data) {
-            session.attributes.chosenRecipie = data['final_recipe'];
+            console.log(data);
 
+    if (!session.attributes) {
+        session.attributes = {}
+    }
+            console.log("Got data ", data);
+            session.attributes.chosenRecipie = data['final_recipe'];
 
             // TODO POST TO GUI
             var output = "Great. Let's get cooking. When you are ready to start with the instructions say start recipe!";
