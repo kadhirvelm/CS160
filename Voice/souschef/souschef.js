@@ -20,7 +20,7 @@ function getRequest(url, callback) {
             try {
                 data = JSON.parse(data);
             } catch (e) {
-                console.log("Error: ", e);
+                console.log("Error: ");
                 callback(false, "Invalid response from the flask app. " + data)
             }
             callback(true, data);
@@ -314,8 +314,6 @@ function onIntent(intentRequest, session, callback) {
         getDietaryRestrictions(intent, session, callback);
     } else if ("RatingFilter" === intentName) {
         getRating(intent, session, callback);
-    } else if ("SubmitRecipe" === intentName) {
-        getRating(intent, session, callback); // todo change
     } else if ("ListRecipies" === intentName) {
         listRecipies(intent, session, callback);
     } else if ("StartReading" === intentName) {
@@ -629,7 +627,7 @@ function handleWebChoice(intent, session, callback) {
         // get full thing from flask
         // session.attributes.chosenRecipie = session.attributes.foundRecipieObjs[index];
         getFinalRecipe(function (data) {
-            session.attributes.chosenRecipie = data;
+            session.attributes.chosenRecipie = data['final_recipe'];
 
 
             // TODO POST TO GUI
