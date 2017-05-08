@@ -1,0 +1,31 @@
+# Server Deployment
+
+api.statushawk.com:80 {
+	tls off
+
+    proxy / 127.0.0.1:5000 {
+        transparent
+    }
+
+    gzip # Serve with gzip compression
+    log /logs/api-access.log {
+        rotate_size 50 # Rotate after 50 MB
+        rotate_age  90 # Keep rotated files for 90 days
+        rotate_keep 20 # Keep at most 20 log files
+    }
+}
+
+statushawk.com:80  {
+	tls off
+    gzip # Serve with gzip compression
+
+    proxy / 127.0.0.1:3000 {
+        transparent
+    }
+
+    log /logs/frontend-access.log {
+        rotate_size 50 # Rotate after 50 MB
+        rotate_age  90 # Keep rotated files for 90 days
+        rotate_keep 20 # Keep at most 20 log files
+    }
+}
