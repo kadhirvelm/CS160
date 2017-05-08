@@ -12,7 +12,7 @@ var https = require('https');
 var querystring = require('querystring');
 
 var BASE_URL = 'https://ddx0dwb6p8.execute-api.us-east-1.amazonaws.com/prod/RecipeUpdate?TableName=Recipes'
-var FLASK_APP = 'bc2abf00.ngrok.io'
+var FLASK_APP = 'api.statushawk.com'
 
 function getRequest(url, callback) {
     https.get(url, function(res) {
@@ -558,7 +558,7 @@ function handleNo(intent, session, callback) {
             session.attributes.foundRecipieInd = 0;
             session.attributes.chosenRecipie = null;
 
-            var output = "I found " + Math.min(50, data.results.length) + " recipes. Check them out on sous-chef.com - or ask me to start reading the recipe names.";
+            var output = "I found " + Math.min(50, data.results.length) + " recipes. Check them out on statushawk.com - or ask me to start reading the recipe names.";
 
             callback(session.attributes, buildSpeechletResponse(CARD_TITLE, output, output, false));
 
